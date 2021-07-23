@@ -3,22 +3,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 // using System.Linq;
 
 namespace API.Controllers
 {
-    [ApiController]//controller some attributes
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    // [ApiController]//controller some attributes
+    // [Route("api/[controller]")]
+    public class UsersController : BaseApiController //ControllerBase when we inherite from the another c# class we get all of it attributes, methods and properties available in class that derived from that particular class.
+    
     {
         private readonly DataContext _context;
         public UsersController(DataContext context)
         {
             _context = context;
         }
+
             [HttpGet]   // add end points here to get all the user and the specific user 
+            //ensure that our endpoint are protected wit authentication is at an authorized attr
             public async Task<ActionResult<IEnumerable<AppUser>>>GetUsers()
             {
                 return await _context.User.ToListAsync();//returning ToListAsync() users Asynchronously 
@@ -38,7 +42,11 @@ namespace API.Controllers
               
             // } // this is called as synchronous code
             // //api/users/3
-            // [HttpGet ("{id}")]   //specify root parameters if somebody its this end points 
+
+            [Authorize]
+            [AllowAnonymous]
+
+            [HttpGet ("{id}")]   //specify root parameters if somebody its this end points 
             // public ActionResult<AppUser> GetUsers(int id)
             
             // { // there is no need to declare a variable if we are not doing anything with it 
@@ -46,7 +54,7 @@ namespace API.Controllers
             // //   var user = _context.User.Find(id);   
             // //   return user;//error on user remove IEmumrable
             // }
-            public async Task<ActionResult<AppUser>> GetUsers(int id)
+            public async Task<ActionResult<AppUser>> GetUsers(int id)//[AllowAnonymous] for GetUsers
             
             { 
                return await _context.User.FindAsync(id); 
