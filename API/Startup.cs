@@ -60,8 +60,6 @@ namespace API
             services.AddCors();
             services.AddIdentityServices(_config);/// wht extension method is use to save us from typing repeatative code
             //
-
-
             // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)//added authentication scheme in parameters
             // //chain on some configuration 
             //     .AddJwtBearer(options => 

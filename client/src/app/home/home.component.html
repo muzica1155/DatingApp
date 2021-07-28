@@ -1,0 +1,27 @@
+<div class="container mt-5">
+    <div *ngIf="!registerMode" style='text-align: center;'>
+    <h1>Find ur customer</h1>
+<p class="lead">come on in to view your matches ....all u nd to do is sign up </p>
+<div class='text-center'>
+    <button (click)="registerToggle()" class="btn btn-primary btn-lg mr-2">Register</button>
+    <button class="btn btn-info btn-lg ">  learn more</button>
+</div>
+</div>
+<div *ngIf="registerMode" class="container">
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <app-register (cancelRegister)= "cancelRegisterMode($event)">
+                
+            </app-register>
+            <!-- <app-register [usersFromHomeComponent]="users" (cancelRegister)= "cancelRegisterMode($event)">
+
+            </app-register> -->
+            <!--(cancelRegister)= ""//call a function inside our parent component that we dont have the yet // cancel register mode will receive that event from our child component & that how we handle child to parent communication  -->
+            <!--when we r sending datafrom a child this goes in parentheses as in it's an output & what we use is our cancel register function-->
+            <!--when we receiving data from our parent that goes in sqaure brackets when we r sending data-->
+            <!-- users is the property thats inside our  -->
+            <!--if u need to send data from a child component to a parent just remember// four thing -->
+        </div>
+    </div>
+</div>
+</div>

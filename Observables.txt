@@ -1,0 +1,199 @@
+the observables 
+
+new standard for managing async data included in ES7 (ES2016)
+ECMAScript 2016
+
+your code still needs to be complied into smthing that most browsers will understand 
+TypeScript is one that can compile itself down into an earlier version of JavaScript
+
+& there's translators such as Bable which will allow u to use modern JavaScript in any App & compile it into A VERSION of JavaScript Browser would understand new & cool
+
+intro in angular 2 
+
+observable are lazy collections of multiple values over time 
+we can use them to stream data 
+we are using them for Http request & will also be using them when we want our components to observe values 
+that we may set up inside the service so that when that value changes  
+ they'll be notifies of the change & can respond accordingly 
+& observables like a newsletter
+Only subscribers of the newsletter actually receive the newslatter & if no one subscribes to the newsleter it probably wont be printed & observables 
+if nobody subscribes they dont do anything they are lazy 
+
+in previous version of javascript & still very much in use today is the concept pf promises today handle asynchronous code 
+
+Promise                               
+Provides a single future value:-
+So if u were making a hasty http request u would wait for it to come back inside a promise and then u would do whatever u need to do & typically in a promise u would use then to say what u want to do next 
+
+Not Lazy;-
+|as soon as u execute the method, u execute a promise regardless if anybody's listening or u do anything next with the value 
+
+can not cancel;-
+you cannot cancel a promise, but u do have the ability to cancel an observables bcoz they deal with streams of data 
+& we can use unobservable with carious operators , such as map, filter, redure etc but what we do is we use a third party library that comes along with angular but technically is not part of angular to do that 
+
+
+
+Observable
+Emits multiple values over time;-
+Promises are not lazy 
+
+lazy 
+able to cancel
+can use with map, filter, reduce & other operators 
+
+
+
+
+Angular Service
+
+getMembers() {
+return this.http.get('api/users)
+}
+observables & angular we already seen we've used that http client to go & get data from our Api returned to us as an observable & if we want to do with observable then we need to subscribe to it 
+{in the code nothing happens)
+bcoz the get members doesn't subscribe so that angular component isn't going to receive any data 
+we hav eto subscribe to an observable on order to do smthing 
+
+
+Angular Component OnInit()
+getMembers() {
+this.services.getMembers()
+
+}
+<!---->
+
+getMembers() {
+return this.http.get('api/users).pipe(
+map(members => {
+console.log(member.id)
+return member.id
+})
+)
+}
+
+wht we could also use with ANGULAR because it comes along with our angular templates is smthing called RxJS 
+and these are recactive extensions for JavaScript & liese work with observables. 
+
+if we take a look at this particular method, we're returning & http get requests so we are going ou to get some data from an API
+
+what if we want to transform that data before we pass it onto the subscriber to that data?
+
+thats where our next RxJS comes In 
+we add a pipe method on to the request or onto the observable bcoz we get an observable back from the http get request 
+
+the first thing we need to do is change a pipe onot it & open some parentheses.
+when we r inside the pipe method we can change as many fucntions as we like to do whatever we want with the data coming back from the server ion the case that we just want transform the data in some 
+way or select parts of the data then what we could use is the map fucntions 
+
+THE MAP FUNCTIONS;- the amp functions applies a function to everything inside that members array 
+
+And in this case, Wht it would do is console log every ID 
+of every member.
+
+& what we could also do is just return the individual member IDs if we didn't want to send back the full object to whoever is subscribing to this 
+
+So we have the opportunity to do smthing withthe observable when we get it back outside of whoever's
+subscribing to it now in order to get data from observables then we have to subscribe to them 
+
+
+
+Subscribe
+
+getMembers() {
+this.service.getMembers().subscribe(members => {
+this.members =members
+}, error => {
+console.log(error);
+}, () => {
+console.log('completed');
+})
+}
+
+//<!---->//
+
+ToPromise()
+
+getMembers() {
+return this.http.get('api/users).toPromise()
+}
+
+//
+& after we r subscribeds we typically have three parts to what we do next in the subscription.
+
+now in this case what we r been doing is setting a class property to the response we get back from the observable 
+
+what we could alsodo we r also sen this is at a functons of what to do if there's an errror 
+
+anything tha's not in the 200 range of HTTP request responses is automatically going to be passed into 
+
+the error part of the subscriptions
+
+and we can do smthing with the error then & we can aslo do smthing when the subscription is 
+
+we can in this case, just log out to the console to say it's completed 
+
+Another way that we can get data from observables without subscribing to them is we can send them to normal JavaScript promise 
+
+And this doesn't give us any of the advantages of observables but what we can do if we send it to a promise, we do activate this request then & it does go & 
+do smthing 
+& the once we r got a promise, we can handle the promises in a normal way in our code & issues 
+then statement to do whatever we want to do 
+Then after we r received the peomised back, we wont be using that particular functionslity in our app bcoz we
+r going to be quite happy with using observables for everthing we need to do.
+
+///<!--->//
+
+<li *ngFor=' let member of service.getMembers() | async'>
+{{member.username}}</>
+
+
+
+
+
+
+now there is another way to get the data from observablse & this is an angular function & it's 
+
+Automatically subscribes/unscribes from the Observables 
+
+smthing refered to as the async pipe. IN this particular method. we have the pipe symbol in our energy
+for statement
+so we got an energy for here & we say let member of service dog get members & then we pipe less into the async pipe 
+then we r got acces to the properties inside here & the advantage or using the async pipe is this automatically subscribe & unsubscribe from the observable
+
+the method in previous code 
+
+{we R not unsubscribing from the observable 
+we would have to do that a differnt way 
+
+but there is a caveat here as well 
+If we r making an http get request or any http request then they typically complete 
+
+so u wouldn't normally need to unsubscribe from the observable
+
+from an http request that kind of a controversial statement bcoz people so say that if u subscribe 
+to smthing u should always unsubscribe from smthing 
+}
+
+ASync Pipe
+
+But if we usually async pipe then we auto matically or 
+Angular automatically does the handles the subscriptions & unscribing from the observables 
+
+now what er could also do is create our own observables 
+we dont just have to get them from a service
+
+we could also create our own And what we going to look at next is persisting our login 
+
+And this ‎will give us an oppertunity to look at unobservables we can crate & we can subscribe to 
+An swe'll takE A look at the next
+
+
+
+
+
+
+
+
+
+
