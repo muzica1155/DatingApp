@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
 import { AccountService } from '../_services/account.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -18,7 +20,9 @@ export class NavComponent implements OnInit {
   // loggedIn: boolean;
   // currentUser$: Observable<User>;
   // constructor(private accountService: AccountService)// if we want to access inside our templete we have to make it public 
-  constructor(public accountService: AccountService)
+  constructor(public accountService: AccountService, private router: Router,
+     private toastr: ToastrService)
+  //WE CAN INJECT OUR ROUTER INTO OUR COMPONENT INSIDE THE constractor JUST LIKE WE DO FOR SERVICES
   { }
 
   ngOnInit(): void { // do smthing bcoz we r getting the current user call th function to go & gets the current user from the account service 
@@ -30,11 +34,14 @@ export class NavComponent implements OnInit {
     // console.log(this.model);
     this.accountService.login(this.model).subscribe(response => 
       {
-        console.log(response);
+        this.router.navigateByUrl('/members');
+        // console.log(response);
         // this.loggedIn = true;
 
     }, error => {
       console.log(error);
+      this.toastr.error(error.error);//
+     // this.toastr.error(error.error);///we should hace http response itself is contained inside the error but the error message is contained inside an error property 
     })//(this.model) an observable oject this may casue a slight issue, So unobservanle is lazy it doesn't do anything until we subscribe to the observable
     //so we have to subscribe & then we r going to get a response back fro our server than we gonna get response back from server
     // now when we log in we r going to get user DTO return to us 
@@ -43,6 +50,7 @@ export class NavComponent implements OnInit {
     this.accountService.logout();
     //interrogate our account service & take a look inside that current user
     // this.loggedIn = false;
+    this.router.navigateByUrl('/')
   }
   // getCurrentUser() {  
   //   //.currentUser$.subscribe// we aRE subscribing TO CURRENT USER BUT CURRENT USER IS NOT AN HTTP REQUEST THIS NEVER COMPLETE

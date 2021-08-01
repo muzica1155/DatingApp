@@ -1,67 +1,74 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">MediaQart</a>
-      <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      <!-- </button>  responsive elements -->
-      <!-- <div class="collapse navbar-collapse" id="navbarCollapse"> -->
-        <!--*ngIf="loggedIn">// structureal directive // we didn't give our logged in property an initial value, but an initial value for a boolean if we dont set it, its always going to start off a false a boolean values default value is false whereas in objects values its default value would be null// but a boolean doesn't have a null its either false or its true posibility only two thing  -->
-      <!---->
-        <!-- <ul class="navbar-nav me-auto" *ngIf="loggedIn">  -->
-          <!-- <ul class="navbar-nav me-auto" *ngIf="currentUser$ | async"> -->
-            <ul class="navbar-nav me-auto" *ngIf="accountService.currentUser$ | async">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Matches</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">List</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Messages</a>
-          </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" (click)="logout()" href="#">Logout</a>
-          </li> -->
-        </ul>
-        <!-- <div class="dropdown" *ngIf="loggedIn" dropdown> -->
-          <!-- <div class="dropdown" *ngIf="currentUser$ | async" dropdown> -->
-            <div class="dropdown" *ngIf="accountService.currentUser$ | async" dropdown>
-              <!-- automatically unsubscribe if our nav component is no longer visible or in use, doesn't really work for us have component thinking good example of async pipe  -->
-          <a class="dropdown-toggle text-light"  dropdownToggle>Welcome user</a>
-          <div class="dropdown-menu mt-3" *dropdownMenu>
-            <a class="dropdown-item">Edit Profile</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" (click)="logout()">Logout</a>
-          </div>
-        </div>
-        <!--*ngIf="!loggedIn" // beacuse this is structureal directive the form is not going to be hindden when we not logged in, not goiing to exist at all if we did want to just hide smthing then we wouldn't use Ngif we would use hidden 7 set not logged in-->
-         <!--but bcoz we dont need to siaplay the form if the user is logged in we might as well remove it --> 
-        <!-- <form *ngIf="!loggedIn" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" 
-        autocomplete="off"> -->
-        <!-- <form *ngIf="(currentUser$ | async) === null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" 
-        autocomplete="off"> -->
-        <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" 
-        autocomplete="off">
-        <!--//when we submit for instance we're going from our template to our components, when we see sqare bracket that means we're receiving smthing from our component when we see both that measns we've got to way binding between our template 7 OUR COMPONENT & THE ENTRY MODEL WE NEED TO GIVE THE NAME OF OUR OBJECTS-->
-        <!-- NOW WE'VE declared a property called model in our component --> 
-        <!-- //templete reference variable #loginForm="ngForm" -->
-          <input
-            name="username"
-            [(ngModel)]="model.username" 
-            
-           class="form-control mr-sm-2"
-            type="text"
-             placeholder="Username"> 
-            <!-- structure what we need for binding [(ngModel)]="binding"  /sqaure bracket used for receiving from our component //(ngModel)//parentices are used when data goes data goes other way around -->   -->
-          <input 
-           name="password"
-           [(ngModel)]="model.password"
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand"  routerLink='/' routerLinkActive='active'>dating</a><!-- whenever we click on one of these linka ia going apply thiS CLASS TO THE -->
+    
+      <!--<span class="navbar-toggler-icon"></span>-->
+    <!-- </button>  responsive elements -->
+    <!-- <div class="collapse navbar-collapse" id="navbarCollapse"> -->
+      <!--*ngIf="loggedIn">// structureal directive // we didn't give our logged in property an initial value, but an initial value for a boolean if we dont set it, its always going to start off a false a boolean values default value is false whereas in objects values its default value would be null// but a boolean doesn't have a null its either false or its true posibility only two thing  -->
+      <!-- <ul class="navbar-nav me-auto" *ngIf="loggedIn">  -->
+        <!-- <ul class="navbar-nav me-auto" *ngIf="currentUser$ | async"> -->
+          <!-- <ul class="navbar-nav mr-auto" *ngIf="accountService.currentUser$ | async"> -->
+            <ul class="navbar-nav mr-auto" > 
+              <ng-container *ngIf="accountService.currentUser$ | async">
+                <li class="nav-item">
+                  <a class="nav-link " routerLink='/members' routerLinkActive='active'>Matches</a>
+                  <!--the forward slash is essential if u miss you will keep changing on additional routes in addition to less-->
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" routerLink='/lists' routerLinkActive='active'>List</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" routerLink='/messages' routerLinkActive='active'>Messages</a>
+                </li>
+                <!-- <li class="nav-item">
+                  <a class="nav-link" (click)="logout()" href="#">Logout</a>
+                </li> -->
 
-          class="form-control mr-sm-2"
-           type="password"
-            placeholder="Password">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
-        </form>
-      <!-- </div> -->
-    </div>
-  </nav>
+              </ng-container><!--htere might be other links that we add that we do want & unauthenticated user to acces // doesn't actually generate any html & its a very useful thing to do if u want to apply a conditional to smthing bcoz its not going to inerfere with any of ur styling bcoz it doesn't generate any html -->
+           <!--ng-container is a better technique for when u r using conditions bcoz of the fact doesn't generate any html & it wont interfere wiht any of your styling when u use it -->
+      </ul>
+      <!-- <div class="dropdown" *ngIf="loggedIn" dropdown> -->
+        <!-- <div class="dropdown" *ngIf="currentUser$ | async" dropdown> -->
+          <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
+            <!--//$ | async) as user//we can now use this property as the user inside our code just like any other property we r got out of our observable & now it's usbale as just our user  -->
+            <!-- automatically unsubscribe if our nav component is no longer visible or in use, doesn't really work for us have component thinking good example of async pipe  -->
+        <a class="dropdown-toggle text-light"  dropdownToggle>Welcome {{user.username | titlecase}}</a> <!--angular pipes give us some functionality & one of the pipes is title case & what this will do is take user name -->
+        <div class="dropdown-menu mt-3" *dropdownMenu>
+          <a class="dropdown-item">Edit Profile</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="logout()">Logout</a>
+        </div>
+      </div>
+      <!--*ngIf="!loggedIn" // beacuse this is structureal directive the form is not going to be hindden when we not logged in, not goiing to exist at all if we did want to just hide smthing then we wouldn't use Ngif we would use hidden 7 set not logged in-->
+       <!--but bcoz we dont need to siaplay the form if the user is logged in we might as well remove it --> 
+      <!-- <form *ngIf="!loggedIn" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" 
+      autocomplete="off"> -->
+      <!-- <form *ngIf="(currentUser$ | async) === null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" 
+      autocomplete="off"> -->
+      <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" 
+      class="d-inline-flex mr-md-7" (ngSubmit)="login()" 
+      autocomplete="off">
+      <!--//when we submit for instance we're going from our template to our components, when we see sqare bracket that means we're receiving smthing from our component when we see both that measns we've got to way binding between our template 7 OUR COMPONENT & THE ENTRY MODEL WE NEED TO GIVE THE NAME OF OUR OBJECTS-->
+      <!-- NOW WE'VE declared a property called model in our component --> 
+      <!-- //templete reference variable #loginForm="ngForm" -->
+        <input 
+          name="username"
+          [(ngModel)]="model.username" 
+          
+         class="form-control  m-2 m-sm-2"
+          type="text"
+           placeholder="Username"> 
+          <!-- structure what we need for binding [(ngModel)]="binding"  /sqaure bracket used for receiving from our component //(ngModel)//parentices are used when data goes data goes other way around -->
+        <input 
+         name="password"
+         [(ngModel)]="model.password"
+
+        class="form-control m-sm-2"
+         type="password"
+          placeholder="Password">
+        <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+      </form>
+    <!-- </div> -->
+  </div>
+</nav>

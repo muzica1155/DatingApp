@@ -23,7 +23,8 @@ export class AccountService {
   // & thew way that we r going to do this we r going to declare this as a private property & we r 
         //going to call it current user source & WE R GOING TO set this to
         // type of observablenow this is kind of a special type of observable called as replaySubject
-  
+    // new ReplaySubject<User>(1); // reason we set this up as an observable is os that this can be observed by other components or other classes in our application when whenver smthing subscribes to this, then it's going to be notified id anyhting changes 
+    //<User>(1);//(1)//god is able to subscribe to this when we use the god it automatically subscribe to any observable we dont need to specifically subscribe to that current user observable in here bcoz the rootguard is automatically going to do this when we try & access that particular property
         // constructor(private http: HttpClient) { }//inject the http client into our account service 
   currentUser$ = this.currentUserSource.asObservable(); //this is currentUser$  going to be observable we give the dollar sign  at the end & then we say that the current user dollatr is equal to this 
    constructor(private http: HttpClient) {}

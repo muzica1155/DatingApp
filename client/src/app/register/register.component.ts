@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { AccountService } from '../_services/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,7 @@ export class RegisterComponent implements OnInit {
   //& goal is this inside our register component html we have cancel button when we click want to do is inside our home compoenet the parent we wan tot change this to that we turn it of & we set this back to force //registerMOde =false; {in home.conponent}//
   model: any = {};
 
-  constructor(private accountService: AccountService) //bring in the account service here so that we can inject the account service into this component and that we need the account dervoce & call the register method will pass in this model & most subscribe there
+  constructor(private accountService: AccountService, private toastr: ToastrService) //bring in the account service here so that we can inject the account service into this component and that we need the account dervoce & call the register method will pass in this model & most subscribe there
   { }
 
   ngOnInit(): void {
@@ -26,6 +27,7 @@ export class RegisterComponent implements OnInit {
     this.cancel();//we haven't got any rooting setup we just go for use conditionals to display and hide componenets
   }, error => {
     console.log(error);
+    this.toastr.error(error.error);
   })
   // console.log(this.model);
 }

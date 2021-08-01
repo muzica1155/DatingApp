@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
+
 import { User } from './_models/user';
 import { AccountService } from './_services/account.service';
 
@@ -14,6 +15,7 @@ export class AppComponent implements OnInit {// angular come with life cycle eve
   users: any;// typescript give us type safty unless we use this particular users properties: any ;
   // constructor(private http: HttpClient, private accountService: AccountService)// use app component to fetch the data and lend display on the page using dependence injection 
   constructor(private accountService: AccountService)//bring in our account service into our app components 
+  
   { 
 
 
