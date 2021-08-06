@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 import { ListsComponent } from './lists/lists.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
@@ -13,7 +16,8 @@ const routes: Routes = [
   },
   {
    path: '',
-   runGuardsAndResolvers: 'always', canActivate: [AuthGuard],children: 
+   runGuardsAndResolvers: 'always', canActivate: [AuthGuard],
+   children: 
    [
     { path: 'members', component: MemberListComponent, canActivate: [AuthGuard]},///
     { path: 'members/:id', component: MemberDetailComponent}, //each members is going to have a root parameter and added a placeholder
@@ -23,8 +27,11 @@ const routes: Routes = [
 
    ]
   },
+  {path: 'errors', component: TestErrorsComponent},
+  {path: 'not-found', component: NotFoundComponent},
+  {path: 'server-error', component: ServerErrorComponent},
   
-  { path: '**', component: HomeComponent, pathMatch: 'full'},//wild card root as in the user's typed in smthing that doesn't match anything inside our reconfiguration
+  { path: '**', component: NotFoundComponent, pathMatch: 'full'},//wild card root as in the user's typed in smthing that doesn't match anything inside our reconfiguration
   // & where we'll direct them to for the time being
    // also specify an extra attribute t& we say pathmatch if user doesn't match any of these routes then we r going to redirect them to the home component or load, 
 

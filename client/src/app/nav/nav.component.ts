@@ -38,9 +38,9 @@ export class NavComponent implements OnInit {
         // console.log(response);
         // this.loggedIn = true;
 
-    }, error => {
-      console.log(error);
-      this.toastr.error(error.error);//
+    // }, error => {//                      }
+    //   console.log(error);//              } invalid password message
+    //   this.toastr.error(error.error);// }
      // this.toastr.error(error.error);///we should hace http response itself is contained inside the error but the error message is contained inside an error property 
     })//(this.model) an observable oject this may casue a slight issue, So unobservanle is lazy it doesn't do anything until we subscribe to the observable
     //so we have to subscribe & then we r going to get a response back fro our server than we gonna get response back from server

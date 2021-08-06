@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-primary">
   <div class="container">
-    <a class="navbar-brand"  routerLink='/' routerLinkActive='active'>dating</a><!-- whenever we click on one of these linka ia going apply thiS CLASS TO THE -->
+    <a class="navbar-brand"  routerLink='/' routerLinkActive='active'>MediaQart</a><!-- whenever we click on one of these linka ia going apply thiS CLASS TO THE -->
     
       <!--<span class="navbar-toggler-icon"></span>-->
     <!-- </button>  responsive elements -->
@@ -26,7 +26,10 @@
                 </li> -->
 
               </ng-container><!--htere might be other links that we add that we do want & unauthenticated user to acces // doesn't actually generate any html & its a very useful thing to do if u want to apply a conditional to smthing bcoz its not going to inerfere with any of ur styling bcoz it doesn't generate any html -->
-           <!--ng-container is a better technique for when u r using conditions bcoz of the fact doesn't generate any html & it wont interfere wiht any of your styling when u use it -->
+              <li class="nav-item">
+                <a class="nav-link" routerLink='/errors' routerLinkActive='active'>Errors</a>
+              </li>
+              <!--ng-container is a better technique for when u r using conditions bcoz of the fact doesn't generate any html & it wont interfere wiht any of your styling when u use it -->
       </ul>
       <!-- <div class="dropdown" *ngIf="loggedIn" dropdown> -->
         <!-- <div class="dropdown" *ngIf="currentUser$ | async" dropdown> -->

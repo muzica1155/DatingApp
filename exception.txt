@@ -1,0 +1,44 @@
+in  Startup.cs (there is middleware called as app.UseDeveloperExceptionPage) if we comment the code here
+and the BuggyController has a exception (the code is var thingToReturn = thing.ToString();) bring up the exception 
+at which app.UseDeveloperExceptionPage gives us the details of the exception handling error in postman page
+when u click to send in postman wha tu get is 500 intenal serve error but the
+we dont get the stack trace & we dont get any info about
+bcoz nothings is responsible fornow for returning that to us 
+we still get the exeption in our terminal window bcoz amthing has happed and get the stack trace & the information about the exception handling
+but nothing doing anything with it is
+it simply outputting the response that being handled by our common language runtime in this case is
+that is reponsible for showing us what we r seiig here 
+in older days if u had smthing such as ana unhandled exception this would actually crash or possibly crash ur emtire web server & the older wen serve tech where they used to run
+every website od a single process than a single badly coded app would bring an entire server down 
+but we have moved Parsley's times & web site code is typically managed into its own isolated process 
+& also this is kind of caught by our common language runtime & it doesn't actually crash our webnserver'
+it causes a prob but our web server keep on ticking & it sends us continues to send us responses to the
+we commented the line we r not doing anything to generate any output bcox we r disabled less 
+
+in olden days we would actually need to handle exception inside each of this methods 
+when we write some code would have to take a look & see what we r doing and figure out what inside here could casuse an exceptions 
+try & catch 
+what we would need to do is we need to surround our code & try catch blocks and we ould have to
+try  block & then we would have a catch block & we do specify exception inside the catch block
+
+public ActionResult<string> getServeError() 
+{
+    try {
+        var thing = _vontext.User.Find(-1);// we r not goinf to find any exception for this check the find 
+    var thingToReturn = thing.ToString();// if we put this to null and try to execute the catch block method to execute
+        if we do have a prob then it send it to catch block 
+
+    return thingToReturn; 
+
+    }
+    catch(Exception ex) {
+      return StatusCode(500, "Computer syno ");just a error message showing in client what is thrown can be caught 
+    }
+   // var thing = _vontext.User.Find(-1);
+    var thingToReturn = thing.ToString();
+    return thingToReturn; //
+}
+ we this is not good bco we r just silently swallowed the error sure we send response to the client but we dont see specific proble inside our terminal and
+ all details are stored inside this ex (Exception ex) andwe r going to creat eour own middleware do specific in any exception that we get 
+ but we r going to catch them in a global way & then decide how we r going to respond to any exceptions
+ that we recive 
