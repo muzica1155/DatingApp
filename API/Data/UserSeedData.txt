@@ -1,0 +1,13 @@
+
+
+we nned to get some data INTO OUR DATABASE & we want to do this that most lazy, efficient way that i can personally think of this
+we r going to generate some json data & then use that to insert data into the database 
+json generator and
+
+
+
+
+json data for alll of our user properties & they match what we have got inside our app user class easy for us to get the data transaclatedd into a c# object or our app user entity so that we can use that to seed our data we have got female users in here and
+
+let get male user 
+
