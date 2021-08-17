@@ -20,7 +20,8 @@ const routes: Routes = [
    children: 
    [
     { path: 'members', component: MemberListComponent, canActivate: [AuthGuard]},///
-    { path: 'members/:id', component: MemberDetailComponent}, //each members is going to have a root parameter and added a placeholder
+    // { path: 'members/:id', component: MemberDetailComponent}, //each members is going to have a root parameter and added a placeholder
+    { path: 'members/:username', component: MemberDetailComponent}, 
     //when we browser to members one or members two, then we r going ro load up the member details components 
     { path: 'lists', component: ListsComponent},
     { path: 'messages', component: MessagesComponent},

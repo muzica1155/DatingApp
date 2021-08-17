@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import {map} from 'rxjs/operators';// this works just like map function in javascript
+import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 
 ///Angular services is a singleton when we inject int into a component & its initialized it will stay initialized until our app is disposed of the user closes the browser. for instance or they move away from our applicaition at that point our services is destroyed
@@ -15,10 +16,12 @@ import { User } from '../_models/user';
 export class AccountService {
   //when we want to set this property to smthing we use equals, if we wanted to make it a type of smthing we would use a colon 
   //but if we just want to set this to smthing, we're going to use the equals to assign the Url
-  baseUrl = 'https://localhost:5001/api/';
+  // baseUrl = 'https://localhost:5001/api/'; // we do not hard coded sting in  our application //take advantage of environment files
  //store values in <user> store value 1 it means the size of our buffer 
  //just the user object for the current user, so we only need one of them & this is either gonna we null 
  //or its going to be current user object 
+  baseUrl = environment.apiUrl;
+  // .apiUrl;//
   private currentUserSource = new ReplaySubject<User>(1); //replaySubject is kind of like a buffer object is going to store the values inside here & any time a subscriber subscribes to less obseervable, its going to omit the last value inside it or however many values inside it that we want to admit 
   // & thew way that we r going to do this we r going to declare this as a private property & we r 
         //going to call it current user source & WE R GOING TO set this to

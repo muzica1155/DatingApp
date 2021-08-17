@@ -1,1 +1,72 @@
-<p>member-detail works!</p>
+<!-- <h1 *ngIf="member">{{member.knownAs}}</h1> -->
+<div class="row" *ngIf="member">
+    <!--use the grid system -->
+    <div class="col-4">
+        <div class="card" >
+            <img src="{{member.photoUrl || './assets/user.png' }}" alt="{{member.knownAs}}" 
+            class="card-img-top img-thumbnail" style="margin: 25px;
+            width: 85%;
+            height: 85%;">
+         <!-- <img src="{{member.photoUrl || }}"//take alternate bcoz when a new user signs up we r not going to give them the facility to add aphoto at the same time it going to be smthing they will need to do a bit later-->
+        <!--if u r good developer then we always add smthing in the alternate & we will say knownAs-->
+        <div class="card-body" style="padding: 0 25px;">
+            <div>
+                <strong>Location:</strong>
+                <p>{{member.city}}, {{member.country}}</p>
+            </div>
+            <div><strong>Age:</strong><p>{{member.age}} </p>
+            </div>
+            <div>
+                <strong>Location:</strong><p>{{member.city}}, {{member.country}}</p>
+            </div>
+            <div>
+                <strong>Last Active:</strong><p>{{member.lastActive}}</p>
+            </div>
+            <div><strong>Member since:</strong><p>{{member.created}}</p>
+            </div>
+        </div>
+        <!--card footer -->
+        <div class="card-footer" style="padding: 10px 15px;
+        background-color: #fff;
+        border-top: none;">
+            <!--class="btn-group d-flex">//this means we going to use css flex box system -->
+            <div class="btn-group d-flex">
+                <button class="btn btn-primary">Like</button>
+                <button class="btn btn-success">Message</button>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="col-8">
+        <tabset class="member-tabset">
+            <!--add some syling need to customize this tabset class we r talking about encupsulation this is the example of the componnet that hasn't tuned off excess encapsulation 
+            they've encapsulated their own styles than give it a class & then we have to add the styles that we want in a global style aheet & then we can affect what 
+        then we can affect whats inside here -->
+        <tab heading= 'About {{member.knownAs}}'>
+            <h4>Description</h4>
+            <p>{{member.introdution}}</p>
+            <h4>Looking For </h4>
+            <p>{{member.lookingFor}}</p>
+        </tab>
+        <tab heading= 'Interests'>
+            <h4>Interests</h4>
+            <p>{{member.interests}}</p>
+           
+        </tab>
+        <tab heading= 'Photos'>
+            <ngx-gallery [options]= "galleryOptions" 
+            [images]="galleryImages" style=" display: inline-block; margin-bottom: 20px;"></ngx-gallery>
+        </tab>
+        <tab heading= 'Messages'>
+            <p>Messages will go here</p>
+        </tab>
+
+        </tabset>
+    </div>
+</div>
+
+<!--//when angular created this template angular didn't know that our user was about to exist 
+//to avoid error in our console is add a conditionals to see if we have the member before we try display the member '-->
+<!--<h1 *ngIf="member">//then we have to check to se if we have a member before we actually display the users names -->

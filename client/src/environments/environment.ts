@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: false, // put inside this any variables we want to use acress our application that will automatically use a different version when we r in productons
+  apiUrl: 'https://localhost:5001/api/', //
   // hostURl: 'https://localhost',
   // username: 'user1',
   // token: 'abcxyz',

@@ -1,0 +1,38 @@
+these ng content applies to anything inside this class and what is effectively been defined
+
+Used or i wanted to steal a card component that i had in a different then those styles
+i just creted there would not apply and that's doen to angular css encupsulations 
+member card component what we could do in our componnet here is specify the encupsulations
+policy
+encupsulations 1st options first ones is deprecated 
+other options is the shadow dom instead the browsers no have an quivalent 
+of what angular does here but it does it natively 
+in the browsers and u need to specify that in the code i belive to use the shadoe dom for this 
+
+we r using is view encupsulations Emulated & this is angular verision of using a shadows dom 
+it basically gives our system encupsulations say ehat what we write inside our css files doesn't infect any
+of the parts of our success or classes in our applications bcox css stands for 
+cascading stasis is designed to be set a global level and cascades doen to all of 
+the elements that share the same class doing
+now behavior & angular is not to use that policy and not to cascades but to encupsulations the styles
+inside a component 
+
+so we use this encupsulations emulated by defaut i we didn't want the behaviour of the
+that we would set this to view encupsulations of none & that would allow as to use global success and
+withour any encupsulations here we wouldin order to target a class inside our component  if we wanted to
+use global stylesheet to do that then we would need to set this encupsulations to none as we would not be able to target 
+elements inside our component if we r using view encupsulations emulated there is a caveat to this day 
+if it is not supply the value is taken from compiler options the default is emulated
+if the policy is set to encupsulations emulated and a component has no styles or style u are specified 
+then we automatically use ur encupsulations then but we do have a stylesheet here 
+if we wnated to overwrite this then we would need to set our encupsulationsto none this is just a brif mentioning
+of this component
+not doing here stick to default & when we need to  style components  we will typically just use the component 
+stylesheet to do so and that way each component is its own self-contained thing where we do not need to style
+to worry about any style being being overridden at a global level
+
+
+
+
+
+

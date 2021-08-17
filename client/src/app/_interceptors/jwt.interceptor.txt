@@ -1,0 +1,4 @@
+after the code is done we check the result on inspect console and chosing network reload the page 
+select the user request selct headers then we r still ataching our authorization token and
+but the advantage now is that we never need to add this on to any request ever again andwe wdo it in one place and
+then our intercept is going to do this work for us all time 

@@ -20,6 +20,8 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { MemberCardComponent } from './members/member-card/member-card.component';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 
 
 
@@ -36,6 +38,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     TestErrorsComponent,
     NotFoundComponent,
     ServerErrorComponent,
+    MemberCardComponent,
  
 
   ],
@@ -48,7 +51,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     SharedModule,
   ],
   providers: [  // angular comes with own interceptors & adding this to an interceptors array inside angular 
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}//specify // multi: true// as true bcoz we want to add thi sto the interceptors we dont want to replace the ones that come with angulat with own interceptors 
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},//specify // multi: true// as true bcoz we want to add thi sto the interceptors we dont want to replace the ones that come with angulat with own interceptors 
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
   ],// we can have multiple interceptors
   bootstrap: [AppComponent]
 })
