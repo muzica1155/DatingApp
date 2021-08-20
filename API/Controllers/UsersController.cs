@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
@@ -77,7 +78,37 @@ namespace API.Controllers
 
             // return _mapper.Map<MemberDto>(user); 
         }//surely its better to go just the properties we need from the database and then at the database level passes back DTO rather than getting the entity & then converting it into a DTO (argument good point )
-
+        
+        [HttpPut]//mehtod that we use to update a resource on server
+        // we r not going to give this any parameter  [HttpGet("{username}")]//bcoz doesn't conflict with anything inside our Api controller'
+        // there r certain things that will conflict we can call it a method whatever we want//<IEnumerable<MemberDto>>> GetUsers()//
+       //this isn't particularly relevant but what is relevant is the method we use the parameters that we use in the root & therefore the parameters that we take in our method 
+       //if we had another http gets but we used ID instead of username then we would have a conflict then & we would need to change our roots in some way 
+       //we would say  [HttpGet("id/{username}")]//differnet from naother root 
+       // but if we r using a differnt method then our Http PUt is the only HTTp to be put inside here 
+       //always gonna be unique 
+       public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)// crate a method// But we dont nee dto sne the object back from this bcoz the theory is that the client has all the data related to the entity we r about to update 
+       // so we dont need to return the object back from our API bcoz the client is telling theAPI what its updating 
+       // it has everyhting it need s & we dont neeed to return the user object fromthis  
+       {// want to do when we update a user 1st thing hold of the user & we also need to get hold of the user's username not trust the user to give us their usernaem 
+       // we actually want to get it from what we r authenticating again which is the token 
+         var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; //inside the controller we have acces to a claims principle of the user now this contain info about their identity 
+         // want to do find the claims that matches the name identifier which is the claim that we give the user in that token 
+         var user = await _userRepository.GetUserByUsernameAsync(username); //once we have the username
+       //FindFirst(ClaimTypes.NameIdentifier)?.Value;// now what this hould give us the user username from the token thatthe API uses to authenticate this user that the user we r going to be updating in htis case & once we have the username we can 
+         _mapper.Map(memberUpdateDto, user);//whe we r updating or using this to update an object then whatwe can use this particular method this map method has got 10 differnt overloads plenty of difernt options about what we can passinto this
+         // & the oveload that we r going to use allows us to pass in this member updates DTo then we will specify what we r going to amp it ot & 
+         //_mapper.Map(memberUpdateDto, user);//this save us manualy mapping between our updating 
+         //& our user object bcoz if we didn't use that then we would need to 
+         //start giving user dots example given below the
+         //user.City = memberUpdateDto.City// we nned to go throug this and this fro all the differnt properties inside tere so we dont need to fdo that if we use automatic 
+          // thanks to auto mapper 
+          _userRepository.Update(user);//now our object is flagged as being updated by entity fraework whatever happens 
+          //even if our user has not been updated by simply adding this flag we guareantee that 
+          // we r not going to get an exceptions or error when we come back from updating the user in our database 
+           if (await _userRepository.SaveAllAsync()) return NoContent();//return form this method if that succesfully we dont need to send any content back for a request and if this fails then what we can do is just retunr a bad request 
+           return BadRequest("Failed to Update user");
+       }
 
     }
 }

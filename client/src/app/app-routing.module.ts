@@ -6,9 +6,11 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { HomeComponent } from './home/home.component';
 import { ListsComponent } from './lists/lists.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 
 const routes: Routes = [
   { //when user browsers to localhost for 200 directly then this component will open // HomeComponent// will be loaded
@@ -19,9 +21,11 @@ const routes: Routes = [
    runGuardsAndResolvers: 'always', canActivate: [AuthGuard],
    children: 
    [
-    { path: 'members', component: MemberListComponent, canActivate: [AuthGuard]},///
+    // { path: 'members', component: MemberListComponent, canActivate: [AuthGuard]},///
+    { path: 'members', component: MemberListComponent},
     // { path: 'members/:id', component: MemberDetailComponent}, //each members is going to have a root parameter and added a placeholder
-    { path: 'members/:username', component: MemberDetailComponent}, 
+    { path: 'members/:username', component: MemberDetailComponent},
+    { path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard]}, //to use members then u would need to use that path match full to actually to activate this particular component so we can adjust us member/edit for appropriate route to use 
     //when we browser to members one or members two, then we r going ro load up the member details components 
     { path: 'lists', component: ListsComponent},
     { path: 'messages', component: MessagesComponent},

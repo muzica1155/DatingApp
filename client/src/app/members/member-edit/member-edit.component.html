@@ -1,0 +1,110 @@
+
+<div class="row" *ngIf="member">
+    <div class="col-4">
+        <h1>Your profile</h1>
+    </div>
+    <div class="col-8">
+        <!--give notificattion made changes to their profile-->
+        <div class="alert alert-info" *ngIf="editForm.dirty">
+            <!--if the for is ddirty then we r going to display the alert & if we go back & take a look -->
+            <!--we got access to our edit form here we have also got access to the form elsewhere inside our templete in alert give a condition -->
+            <strong>Information: 
+                
+            </strong> You have made changes. Any unsaved changes will be lost 
+        </div>
+    </div>
+    <!--use the grid system -->
+    <div class="col-4">
+        <div class="card" >
+            <img src="{{member.photoUrl || './assets/user.png' }}" alt="{{member.knownAs}}" 
+            class="card-img-top img-thumbnail" style="margin: 25px;
+            width: 85%;
+            height: 85%;">
+        
+        <div class="card-body" style="padding: 0 25px;">
+            <!-- <div>
+                <strong>Location:</strong>
+                <p>{{member.city}}, {{member.country}}</p>
+            </div> -->
+            <div><strong>Age:</strong><p>{{member.age}} </p>
+            </div>
+            <div>
+                <strong>Location:</strong><p>{{member.city}}, {{member.country}}</p>
+            </div>
+            <div>
+                <strong>Last Active:</strong><p>{{member.lastActive}}</p>
+            </div>
+            <div><strong>Member since:</strong><p>{{member.created}}</p>
+            </div>
+        </div>
+        <!--card footer -->
+        <div class="card-footer" style="padding: 10px 15px;
+        background-color: #fff;
+        border-top: none;">
+          
+            <!-- <div class="btn-group d-flex"> -->
+                <div class="btn-group d-flex">
+
+                <!--<button [disabled]="editForm.dirty" // if I refresh the form then we want to disable this unless changes have been made Go to button disabled it give expression make it available or not disabled-->
+                <!--! not operator bcoz we want tis button diacbled if the form is not dirty & enabled if it is direty -->
+                    <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
+                <!--for this particular button take up the full weight of the container -->
+            </div>
+
+            
+        </div>
+    </div>
+    </div>
+
+    <div class="col-8">
+        <tabset class="member-tabset">
+            
+        <tab heading= 'About {{member.knownAs}}'>
+            <form #editForm="ngForm" id="editForm" (ngSubmit)="updateMember()">
+                <!--create a method in the component so we can actually submit some -->
+                <!--we have to make form into angular for template reference variable use # to call-->
+                <h4>Description</h4>
+                <!-- <p>{{member.introdution}}</p> -->
+                <textarea class="form-control" [(ngModel)]="member.introdution" name="introdution" rows="6"></textarea>
+                <!--name="lookingFor"//change into //name="lookingfor"//if u made changes in textare in wbsite then save the data goes missing 
+                data disappeares angular uses this name property to track the property inside the form -->
+                
+                <h4 class="mt-2">Looking For </h4>
+                <!-- <p>{{member.lookingFor}}</p> -->
+                <textarea class="form-control" [(ngModel)]="member.lookingFor" name="lookingFor" rows="6"></textarea>
+                <!--[(ngModel)]="member.lookingFor"//ng model gives us the binding & the name property is used in the background so that when we do update our form then angular is going to reset our form then angular is looking for this name & it wants it to be the same obviously as the property that we r updating -->
+                <h4 class="mt-2">Interests </h4>
+               
+                <textarea class="form-control" [(ngModel)]="member.interests" name="interests" rows="6"></textarea>
+                <!--look at location deatils -->
+                <h4 class="mt-2">Location Details: </h4>
+                <div class="from-inline">
+                    <label for="city">City: </label>
+                    <input [(ngModel)]="member.city" type="text" name="city" class="city" class="form-control me-xl-2">
+                    <label for="country">Country: </label>
+                    <input [(ngModel)]="member.country" type="text" name="country" class="city" class="form-control me-xl-2">
+                </div>
+
+            </form>
+           
+
+        </tab>
+        <tab heading= 'Edit Photos'>
+            <!-- <h4>Interests</h4> -->
+            <!-- <p>{{member.interests}}</p> -->
+            <p>Photo edit will go here </p>
+           
+        </tab>
+        <!-- <tab heading= 'Photos'>
+            <ngx-gallery [options]= "galleryOptions" 
+            [images]="galleryImages" style=" display: inline-block; margin-bottom: 20px;"></ngx-gallery>
+        </tab>
+        <tab heading= 'Messages'>
+            <p>Messages will go here</p>
+        </tab> -->
+
+        </tabset>
+    </div>
+</div>
+
+

@@ -1,6 +1,7 @@
 <p>member-list works!</p>
 <div class="row">
-    <div *ngFor="let member of members" class="col-2">
+    <div *ngFor="let member of members$ | async" class="col-2">
+        <!--of members$ | async"// async pipe so that we can subscribe to this observable & $ is used to indicate it is used as Observables-->
         <app-member-card [member]="member"></app-member-card>
         <!--each one of this members we r going to be displaying this member card component inside
              which means we r going to be passing one of the members or each member is going to be

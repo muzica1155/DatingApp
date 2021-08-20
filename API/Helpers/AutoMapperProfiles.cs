@@ -18,6 +18,11 @@ namespace API.Helpers
             //What property are we looking to affect ?//opt.MapFrom //we can tell it where we want to map from very specifically 
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));//new mapping configuration 
             CreateMap<Photo, PhotoDto>(); //a map from our photo to or form our photo entity to our photo
+            CreateMap<MemberUpdateDto, AppUser>();
+            //want to go from our member update DTO to our app user 
+            //<MemberUpdateDto, AppUser>().ReverseMap// ther eis a option called reverse mapa we could reverse map
+            //but we r not going from our member DTo we r going from a differnt DTO
+            //use separate configuration option for this 
         }
     }
 }

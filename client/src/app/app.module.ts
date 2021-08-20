@@ -22,6 +22,9 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 
 
 
@@ -39,6 +42,7 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     NotFoundComponent,
     ServerErrorComponent,
     MemberCardComponent,
+    MemberEditComponent,
  
 
   ],
@@ -49,10 +53,13 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     BrowserAnimationsModule,
     FormsModule,
     SharedModule,
+    NgxSpinnerModule
   ],
   providers: [  // angular comes with own interceptors & adding this to an interceptors array inside angular 
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},//specify // multi: true// as true bcoz we want to add thi sto the interceptors we dont want to replace the ones that come with angulat with own interceptors 
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    
   ],// we can have multiple interceptors
   bootstrap: [AppComponent]
 })

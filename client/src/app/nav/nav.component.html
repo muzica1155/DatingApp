@@ -38,7 +38,7 @@
             <!-- automatically unsubscribe if our nav component is no longer visible or in use, doesn't really work for us have component thinking good example of async pipe  -->
         <a class="dropdown-toggle text-light"  dropdownToggle>Welcome {{user.username | titlecase}}</a> <!--angular pipes give us some functionality & one of the pipes is title case & what this will do is take user name -->
         <div class="dropdown-menu mt-3" *dropdownMenu>
-          <a class="dropdown-item">Edit Profile</a>
+          <a routerLink='/member/edit' class="dropdown-item">Edit Profile</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="logout()">Logout</a>
         </div>
