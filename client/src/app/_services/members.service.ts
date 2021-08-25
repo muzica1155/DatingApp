@@ -63,6 +63,16 @@ export class MembersService {//services are singleton they're instantiated when 
    //so we also need to update this when we update our member as well 
   }
 
+  setMainPhoto(photoId: number) //add a method to set the user's MainPhoto
+  {
+    return this.http.put(this.baseUrl + 'users/set-main-photo/' + photoId, {});//bcoz its a put request we do need to send smthing in the body but what we can send up here is na empty object
+  //& that will suffice for our service for the time being 
+  }
+  deletePhoto(photoId: number)// add a new method in here to delete the photo & well go to photoID
+  { 
+    return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);//Concatenated ur photo straight on to the this method here//'users/delete-photo/' + photoId);// 
+  }
+
 }//get<Member[]>(this.baseUrl//only need to specify the type in our request to tell it what we r receiving back from the server
 
 

@@ -11,7 +11,7 @@ namespace API.Entities
         public string Url { get; set; }
         public bool IsMain { get; set; }
 
-        public string PublicId { get; set; }
+        public string PublicId { get; set; }//we created this string for the public ID so that we would n't need to run it now which would mean we need to add any migration already got in place 
 
         //if u want to enable cacate delete make sure our app use a property in that table cannot be null then we need to do called fully defining the relationship
         //and to fully define relationship tell photo entity about appuser class will addd a property fully appuse

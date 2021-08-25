@@ -30,7 +30,8 @@ export class AccountService {
     //<User>(1);//(1)//god is able to subscribe to this when we use the god it automatically subscribe to any observable we dont need to specifically subscribe to that current user observable in here bcoz the rootguard is automatically going to do this when we try & access that particular property
         // constructor(private http: HttpClient) { }//inject the http client into our account service 
   currentUser$ = this.currentUserSource.asObservable(); //this is currentUser$  going to be observable we give the dollar sign  at the end & then we say that the current user dollatr is equal to this 
-   constructor(private http: HttpClient) {}
+  // currentUser$//we r going to have access to that property inside here & this is going to aloow us to set the user's image in navBAr
+  constructor(private http: HttpClient) {}
    login(model: any)//method created logiis going to receive our credentials from the login form from our appbar 
    {
      // model contain our username & password that we send up to the server
@@ -43,9 +44,11 @@ export class AccountService {
        map((response: User) => { // curly brackets to add statements
         const user = response; // we r going to create unobservable to store our user in
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user)); //this item a key of user, & then we r going to take the object we get back & stringify it 
-        //now when we subscribe or when we log in because we r subscribing in our nav component then this function is going to run & it's going to populate our user inside local storage in the browser
-       this.currentUserSource.next(user); //we r going to set our current user or the obsevable to replace subject & set this to the current user  we get back from our API
+          //instead of two line we can set this too 1 line
+          this.setCurrentUser(user);//& i reserve the right to come & change my mind about this 
+      //     localStorage.setItem('user', JSON.stringify(user)); //this item a key of user, & then we r going to take the object we get back & stringify it 
+      //   //now when we subscribe or when we log in because we r subscribing in our nav component then this function is going to run & it's going to populate our user inside local storage in the browser
+      //  this.currentUserSource.next(user); //we r going to set our current user or the obsevable to replace subject & set this to the current user  we get back from our API
       }
        })
        //what we wanna do with response 
@@ -61,8 +64,11 @@ export class AccountService {
         //but we do hav user object we will specify or over user type for this 
         if (user) {//user object a type & will say & we need to do this at the map
           
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);// problem we haven't given our user object to type & we have given it type to our current user source // not able ot set as object 
+          // localStorage.setItem('user', JSON.stringify(user));
+          this.setCurrentUser(user);// when we get our user back from the API this is going to include that photo URl as well
+          // this.currentUserSource.next(user);// problem we haven't given our user object to type & we have given it type to our current user source // not able ot set as object 
+        // this.currentUserSource.next(user);//instead of using that method her we can kjust say this set current user & we can pass in the user 
+        // we can do same for the login 
         }
         // return user;//we dont need the user just as an example gonna return the user to be clear what we r doing from our functon
         // just to be clear what we saw toreturn user from this 
@@ -72,7 +78,8 @@ export class AccountService {
    }
 
    setCurrentUser(user: User)// add helper method her called set current user
-    {
+    {// shifted the local storage method to setCurrentUser from if (user)//
+      localStorage.setItem('user', JSON.stringify(user));// lets tidy this up instead of using or havinf local storage in multiple places where we set the item
       this.currentUserSource.next(user);
     }
    logout() {//we want to do is be able to persist our in here so in our roots app component

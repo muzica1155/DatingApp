@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,6 +65,8 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)///for now return the appuser to refect the successfully login 
         {
             var user = await _context.User
+            .Include(p => p.Photos)// now we r going to have some photos when we try 7 execute our login method & this source "Photos" is no longer going to be empty if the user doesn't have a photo that will not cause anexception here 
+            //bcoz it's simply going to reurn nullBut if it doesn't have anu photos to work with that when we see the exception 
             .SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
             if (user == null) return Unauthorized("Invalid username");
             //how do we find our user in DB use HMac5.2 because we need to reverse the what we did when we registered 
@@ -78,13 +81,26 @@ namespace API.Controllers
             {
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");
             }
-             return new UserDto
+             return new UserDto//this is where we r creating our new user 
             {
-                Username = user.UserName,
-                Token = _tokenService.CreateToken(user)// we are going to get error message because we haven't specify configuraiton  property that we add for our token key //config["TokenKey"]
+                Username = user.UserName,// Source Is our Photos
+                Token = _tokenService.CreateToken(user),// we are going to get error message because we haven't specify configuraiton  property that we add for our token key //config["TokenKey"]
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url//in logging method we can also return the phot URL 
+            //get Url property from this even though that they have registered it doesn't mean they have got a photo 
+            //look at he optional property there So the photo u are on will be no '
             };
             // return user;// we have to change this & create a Anothe DTO
             //before edit change the AppUser from ActionResult function
+            //user.Photos// why would this user object not have any photos while our photos is our related entity ?
+            //what we r get for user //inside our account controller we r not using a repository here 
+            //what we r doing is we r injecting the data context into this now 
+            // we r not going to change this policy//we r not go & add our user repository into this 
+            //public AccountController(DataContext context, ITokenService tokenService)
+            //this account control is goign to be updated later on when we use identity 
+            //but what wr r not doing is returning the photos with this 
+            //What we r not doing is returning the photos with this 
+            //.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            //
         }
 
 
