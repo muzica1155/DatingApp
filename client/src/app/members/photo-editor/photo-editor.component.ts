@@ -88,9 +88,16 @@ export class PhotoEditorComponent implements OnInit {
 
   this.uploader.onSuccessItem = (item, response, status, headers) => {
    if(response) {//if we have got a response & if we have them 
-    const photo = JSON.parse(response);
+    const photo: Photo = JSON.parse(response);//const photo: Photo// by giving the type to the photo as Photo we get intellisense in if (photo.is) type safety in interllisense
     this.member.photos.push(photo);//this take care of our components coach 7 we take a look at what we need 
+    if (photo.isMain)// we need to do check to see if the photo is the main photo
+    {
+      this.user.photoUrl = photo.url;
+      this.member.photoUrl = photo.url;
+      this.accountService.setCurrentUser(this.user);// acces our accoutservice 
+      //what they should do is update the image everywhere 
 
+    }
    } //& without the arrow function we check to see 
   }// inside the methos there is required parameters here need to pass all of this 
 

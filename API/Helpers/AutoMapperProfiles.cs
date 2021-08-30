@@ -23,6 +23,10 @@ namespace API.Helpers
             //<MemberUpdateDto, AppUser>().ReverseMap// ther eis a option called reverse mapa we could reverse map
             //but we r not going from our member DTo we r going from a differnt DTO
             //use separate configuration option for this 
+            CreateMap<RegisterDTo, AppUser>();//create a new mapping to go from [registeration form]
+            // CreateMap<RegisterDTo, AppUser>();// this means we dont really need to map the properties htat we r receiving in our account a controller
+            
+            
         }
     }
 }

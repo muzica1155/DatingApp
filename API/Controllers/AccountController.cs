@@ -6,6 +6,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +16,10 @@ namespace API.Controllers
     {
         private readonly DataContext _context;
         private readonly ITokenService _tokenService;
-        public AccountController(DataContext context, ITokenService tokenService)
+        private readonly IMapper _mapper;
+        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
         {
+            _mapper = mapper;
             _tokenService = tokenService;
             _context = context;
         }
@@ -38,6 +41,8 @@ namespace API.Controllers
             //
             if (await UserExists(registerDto.Username)) return BadRequest("Username is taken ");
             // if(!ModelState.IsValid) return BadRequest("ModelState");
+            //{registeration form }
+            var user = _mapper.Map<AppUser>(registerDto);
 
 
 
@@ -45,18 +50,23 @@ namespace API.Controllers
             using var hmac = new HMACSHA512(); //this is going to provide us in hashing algorithm gonna use to create a password hash for
             //when we finished with HMACSHA512();it gonna dispose correctly anytime we are using class with using statement it gonna call a method inside the class called dispose 
             //any class that uses dispose method will implement something called the i disposeable interface 
-            var user = new AppUser
-            {
-                UserName = registerDto.Username.ToLower(),//specify username and store in lowercase
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),//hmac.ComputeHash method which is expecting byte array i order to get byte array we need to execute another method called getbyte then it runs to exception bcoz get byte expect smthing yo convert into byte array but it cant convert null into bytearray 
-                PasswordSalt = hmac.Key
-            };
+            // var user = new AppUser  // remove the creation of the new user here 
+            // {
+            //     UserName = registerDto.Username.ToLower(),//specify username and store in lowercase
+            //     PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),//hmac.ComputeHash method which is expecting byte array i order to get byte array we need to execute another method called getbyte then it runs to exception bcoz get byte expect smthing yo convert into byte array but it cant convert null into bytearray 
+            //     PasswordSalt = hmac.Key
+            // };
+             user.UserName = registerDto.Username.ToLower();//specify username and store in lowercase
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));//hmac.ComputeHash method which is expecting byte array i order to get byte array we need to execute another method called getbyte then it runs to exception bcoz get byte expect smthing yo convert into byte array but it cant convert null into bytearray 
+                user.PasswordSalt = hmac.Key;
+            
             _context.User.Add(user);
             await _context.SaveChangesAsync();
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs,//we r also going to return 
             };
 
         }
@@ -81,13 +91,15 @@ namespace API.Controllers
             {
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");
             }
-             return new UserDto//this is where we r creating our new user 
+            return new UserDto//this is where we r creating our new user 
             {
                 Username = user.UserName,// Source Is our Photos
                 Token = _tokenService.CreateToken(user),// we are going to get error message because we haven't specify configuraiton  property that we add for our token key //config["TokenKey"]
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url//in logging method we can also return the phot URL 
-            //get Url property from this even though that they have registered it doesn't mean they have got a photo 
-            //look at he optional property there So the photo u are on will be no '
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,//in logging method we can also return the phot URL 
+                                                                         //get Url property from this even though that they have registered it doesn't mean they have got a photo 
+                                                                         //look at he optional property there So the photo u are on will be no '
+                KnownAs = user.KnownAs
+                // bcoz we'll make use of that inside our Nav Bar rather tha using the user's username 
             };
             // return user;// we have to change this & create a Anothe DTO
             //before edit change the AppUser from ActionResult function

@@ -1,0 +1,72 @@
+register.component.html','
+ <!-- <form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off"> -->
+ <!-- what we got is significantly less code but should retain all of the functionality that we had before -->
+    <!--[label='']>// will specfy single quotes & then bcoz we r passing this ia a property we dont need specify double quotes-->
+    <!--<div class="form-group">-->
+        <!-- angular uses this name property to track what being entered into the form if u forget it u get error -->
+        <!-- <input type="text" class="form-control" name="username" 
+        [(ngModel)]="model.username" placeholder="Username" > -->
+        <!--[class.is-invalid='registerForm.get()']// used bootstrap classs specify period than class that we want to apply if this expression evaluates to true  is class is invalid -->
+        <!--.errors &&//make sure that the field has actually been touched before we actually display any validation error -->
+        <!-- <input 
+         [class.is-invalid]='registerForm.get("username").errors
+          && registerForm.get("username").touched'
+        type="text" 
+        class="form-control"
+         formControlName='username'
+         placeholder="Username" >
+         <div class="invalid-feedback">Please enter your username</div> -->
+        <!-- anytime we use the energy model which we will be using we will be using we have to give our inputs & name  -->
+    <!--</div>-->
+
+    <!-- <div class="form-group">
+        <label>Who is ur favouritr user?</label>
+        <select class="form-control">
+            <option *ngFor="let user of usersFromHomeComponent" [value]="user.userName">
+                {{user.userName}}
+                <!--{{user.userName}}//show pass data from a parent component doen to a child component & make use of this property to do so -->
+            <!-- </option> -->
+            <!--[value]="user.userName"// this value that output we display goes inside the auction & we'll use interpellation-->
+            <!--*ngFor give is the structure of the for loop that we r going to use -->
+            <!--move over the options is we r going to loop over the uses that we passed down from our home component -->
+        <!-- </select> -->
+    <!-- </div> --> -->
+
+    <!-- <div class="form-group">
+       
+        <!-- <input type="password" class="form-control" name="password" 
+        [(ngModel)]="model.password" placeholder="Password" > -->
+        <!-- <input 
+        [class.is-invalid]='registerForm.get("password").errors
+          && registerForm.get("password").touched'
+        type="password" 
+        class="form-control" 
+        formControlName='password'
+         placeholder="Password" >
+         <div *ngIf="registerForm.get('password').hasError('required')" 
+         class="invalid-feedback">Please enter your password</div>
+         <div *ngIf="registerForm.get('password').hasError('minlength')" 
+         class="invalid-feedback">Password must be at least 4 characters</div>
+         <div *ngIf="registerForm.get('password').hasError('maxlength')" 
+         class="invalid-feedback">Password must be at most 8 characters</div> --> 
+         
+         <!--we r going to check inside the area to see what type of error it is need to add a conditional-->
+         <!--hasError('minlength')" //check exactly the casing take a look at component.ts when we specify minlength //.minLength(4),//it Camell case If u try inside our in component.html wont see the validation errors it wont work has to be lowercase -->
+        
+    <!-- </div>
+    <div class="form-group">                  
+    <input 
+    [class.is-invalid]='registerForm.get("confirmPassword").errors
+          && registerForm.get("confirmPassword").touched'
+    type="password" 
+    class="form-control" 
+    formControlName='confirmPassword'
+    placeholder="Confirm Password" >
+    <div class="form-group text-center"  >
+    </div> -->
+    <!--formControlName='confirmPassword'// this is a native form control in the dome want ro access-->
+        <!-- <div *ngIf="registerForm.get('confirmPassword').hasError('required')" 
+         class="invalid-feedback">Please enter your confirm password</div>
+         <div *ngIf="registerForm.get('confirmPassword').hasError('isMatching')" 
+         class="invalid-feedback">Confirm Password must be same password </div>
+         </div> -->
