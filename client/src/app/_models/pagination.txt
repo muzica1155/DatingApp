@@ -1,0 +1,17 @@
+//going to give ourpagination info 
+export interface Pagination {
+    currentPage: number;
+    itemsPerPage: number;
+    totalItems: number;
+    totalPages: number;
+}
+//this needs to mathc exactly the info that we saw inside the response header or u will get errror 
+
+//crate a class for this function
+export class PaginatedResult<T>//this is going to be used for any of our differnet times & bcoz time script is great it also take type parameters & we can specify it here 
+//which means we can use our patinated results with any of our differnet types 
+{
+ result: T;  // T & for the initial example T is going to represent a array of membres we can use it for anything 
+// ourlist of members r going to eb stored in the result property & the pagination
+ pagination: Pagination; //the pagination info going to be stored in the pagination that 
+}

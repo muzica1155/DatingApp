@@ -1,0 +1,62 @@
+// we gonna makeit generic we say can take any type of entity 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace API.Helpers
+{
+    public class PagedList<T> : List<T>// list of t means list of users  a list of members etc 
+    // t could be our member for instance & it gets swapped at compile time depending on what we use with our page list & our page list is going to be a type of list
+    // whAT WE R GOING TO DO IS INHERIT FROM THE LIST  
+    {// inside this constructor we r going to pass in the intems that we get from our query this going to be Type IEnumerable
+        // public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize, int totalCount)
+        public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
+        {
+            CurrentPage = pageNumber;
+            TotalPages = (int) Math.Ceiling(count / (double) pageSize);// going to set the total pages & we need to calculate this based on how many result there r we r going to cast it to an int 
+            //(int) Math.Ceiling(count  means if we got a total count of 10 & our page sizes five then we r going to wrok out that we have got two pages from this query if we had a count of nine then
+            // we r going to work out count of nine divided by page size which would be four point five but we r going to go the ceiling & make that an integer so that would stll work out as two pages 
+            // 
+            PageSize = pageSize;
+            TotalCount = count;
+            AddRange(items);//add the range of the items inside this constractors / so that we have access to these items inside our page 
+          // AddRange(items);// add the items into this class so that when we do u create a new instance 
+
+        
+
+        }
+
+        public int CurrentPage { get; set; }//paging propertiesso we can have a propery for the current page & will have a property for the total mumber of the page called total pages 
+        public int TotalPages { get; set; }//prperty total nO of pages 
+        public int PageSize { get; set; }//property for the page size 
+        public int TotalCount { get; set; }//property for the total count  how many intems r in this query?
+
+        // Now this could be all of our users & we dont do any paging or it could be based on our query 
+        //let say we just wanted to get al the female users then it would be how many total female users r available & that what goes in the total count 
+        //& we work out te total pages & which page we r on & how big the pages as well 
+        //what we need a constractor this gives starting place what we wan to do 
+          
+          public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)// going to create a static method that we can call from anywhere 
+          //CreateAsync()// what we r going to pass into this is an IQ variable bcox thi si going to receive our query where we work out the 
+          // pagination information predicate we r using for a where clause for instance we r going to have 
+          //an IQ variable that we r going to pass into this we'll see how this wroks as we build it out 
+          //CreateAsync(IQueryable<T> source //of this which we do by using this method we r cerating a new intance of our Paisleys class bcoz that's what we r returning 
+          {
+              var count = await source.CountAsync();//inside this method work on count how many items r left from this query 
+             //source.CountAsync();// this does make a database call This is unavoidable if we want ot work out the total nO
+          // of records that we r going to return we have to use this count bcoz what we get back from the database 
+          // is not going to equal what the toal count of available items is so there no avoiding making two separate queries from this 
+             
+             // no choice but to make two queries to our database here we wnat to get the count of the potential total items that we r going to be returned & then we execute the query along withthe skip undertake parameters & then we execute this to a list 
+              var items = await source.Skip((pageNumber - 1) * pageSize)
+              .Take(pageSize).ToListAsync();//so if we r one page nO 1 for instance then we say page nO 1 or page number minus 1 gives us zero times by the pag size 
+              //which could be 5 then we r going to start then we r going to say we r going to skip no records & WE'R going to take 5  fro example if we were on page nO 2 then we would minus one to make it one times by the page 
+              //size which could be five & then we r going to take five caelum will be on the 2nd page of the next five records & what we want to do after this is we want to say return
+              return new PagedList<T>(items, count, pageNumber,pageSize);// look strange for a class bcoz w have got a static method inside here that then goes ahead & effectively creates a new instance of this class
+              //that we then return that contains all of these properties& that what we r doing with this ad range 
+          }
+    
+    }
+}

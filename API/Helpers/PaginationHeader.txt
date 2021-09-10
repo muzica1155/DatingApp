@@ -1,0 +1,26 @@
+//& this is going to contain similar properties to what we had inside our page list class.
+//but we cant reuse that we need to do this in a separateclass so what we'll do is we'll just add 
+//
+namespace API.Helpers
+{
+    public class PaginationHeader//when we create a new instance of a pagination HEAder we r just going to need to pass in the current page the items per page to total items & the total pages 
+    //add an extension method so that we can add a pagination header to a http response 
+    {
+        public PaginationHeader(int currentPage, int itemsPerPage, int totalItems, int totalPages)
+        {
+            CurrentPage = currentPage;
+            ItemsPerPage = itemsPerPage;
+            TotalItems = totalItems;
+            TotalPages = totalPages;
+        }
+
+        public int CurrentPage { get; set; }
+
+        public int ItemsPerPage { get; set; }
+
+        public int TotalItems { get; set; }
+
+        public int TotalPages { get; set; }
+        //this is all the information we wnat to send back to the client & we'll just add a contructor 
+    }
+}

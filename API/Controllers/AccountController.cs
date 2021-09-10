@@ -67,6 +67,7 @@ namespace API.Controllers
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,//we r also going to return 
+                Gender = user.Gender,
             };
 
         }
@@ -98,8 +99,10 @@ namespace API.Controllers
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,//in logging method we can also return the phot URL 
                                                                          //get Url property from this even though that they have registered it doesn't mean they have got a photo 
                                                                          //look at he optional property there So the photo u are on will be no '
-                KnownAs = user.KnownAs
+                KnownAs = user.KnownAs,
                 // bcoz we'll make use of that inside our Nav Bar rather tha using the user's username 
+
+                Gender = user.Gender, //update our dto do the same for the register method 
             };
             // return user;// we have to change this & create a Anothe DTO
             //before edit change the AppUser from ActionResult function

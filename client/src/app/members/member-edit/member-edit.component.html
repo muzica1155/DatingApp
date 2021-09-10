@@ -32,9 +32,9 @@
                 <strong>Location:</strong><p>{{member.city}}, {{member.country}}</p>
             </div>
             <div>
-                <strong>Last Active:</strong><p>{{member.lastActive}}</p>
+                <strong>Last Active:</strong><p>{{member.lastActive | timeago}}</p>
             </div>
-            <div><strong>Member since:</strong><p>{{member.created}}</p>
+            <div><strong>Member since:</strong><p>{{member.created | date: 'dd MMM yyyy HH:mm:ss'}}</p>
             </div>
         </div>
         <!--card footer -->

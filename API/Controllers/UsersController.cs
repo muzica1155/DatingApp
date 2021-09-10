@@ -6,6 +6,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -38,12 +39,35 @@ namespace API.Controllers
 
         [HttpGet]   // add end points here to get all the user and the specific user 
                     //ensure that our endpoint are protected wit authentication is at an authorized attr
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)// we r not taking anything in a request at the moment 
+        //but what we r going to do is take all of these parameters as a query string & we r going to store that in an object 
+ //(UserParams userParams)// bcoz its a query string we need to specify [FromQuery] give our API controller this attribute going to get the user parameters from the query string parameters
+//we didn't supply anything in the query string & we have got the user param objects there API got confused 
+
+        //need to do add this info that we get back from our  page list into our response header //GetUsers(UserParams userParams)
         {
-            var users = await _userRepository.GetMembersAsync();
+//Populate the current user name property into the userParams & set a default propertythat is just the opposite to their current gender if they dont specify anything inside here 
+//before we pass our user parameters to get members method we r going say user progrma current username is equal to user & will say get user name 
+     var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+    //  userParams.CurrentUsername = User.GetUsername();
+    userParams.CurrentUsername = user.UserName;
+
+     // add a check 
+     if (string.IsNullOrEmpty(userParams.Gender))
+           
+           userParams.Gender = user.Gender == "male" ? "female" : "male";
+           //we actually need to get thecurrent user in order to get access to the gender 
+            var users = await _userRepository.GetMembersAsync(userParams);// now our users now thisuses variable is now a page list of typed memeber DTO mean we got our pagination info inside here as well  
             // var users = await _userRepository.GetUsersAsync();//we are using repository & gwtting hte users from our repository 
             // var usersToReturn = _mapper.Map<IEnumerable<MemberDto>>(users);///Map<MemberDto>();// pass the source object in parameters// we dont just want ot map to our member Dto want map to mappersto also wanto to map
             //IEnumerable of our mumber dto
+             //(userParams);// but we r sending this up as an object & query string parameters can also go as individual properties here 
+                Response.AddPaginationHeader(users.CurrentPage, users.PageSize,
+                 users.TotalCount, users.TotalPages);
+                // get access to our response which we have inside our controllers we have always got access to the http request stuff inside here //which is extension method we created
+                //in Pareameters takes int currentPage int items so on 
+                //bcoz we r in API controller & we r using that API controller attribute, this controller should be smart enough to recognize when we send up query string parameters & going to match them inside here or it should do 
+                // Our API controller not that smart Unsuppoerted media error on postman request
 
             return Ok(users);//when we use projection we dont actually need to include bcoz the entity framework is going to work out the correct query to join the table & get what we need from the database So this can be more efficient way of doing things
             // return await _userRepository.GetUsersAsync();not gonna work in repository if wrap inside ok rsult

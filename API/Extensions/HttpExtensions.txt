@@ -1,0 +1,38 @@
+using System.Text.Json;
+using API.Helpers;
+using Microsoft.AspNetCore.Http;
+
+namespace API.Extensions
+{
+    public static class HttpExtensions
+    {
+        public static void AddPaginationHeader(this HttpResponse response, int currentPage,
+         int itemsPerPage, int totalitems, int totalPages)// we r not gonna return anything bcoz we r adding our pagination headers onto a response & we'll call it add pagination header 
+          {
+              var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalitems, totalPages);
+              //remember things going in parenthesis four parameters MEANS we need to get thisin exactly the correct order take at our pagination header then we need to specify this exactly as it specifies on here otherwise we 'll get mixed up results
+              //crate a pagination headers going to save our pagination headers to
+
+              var options = new JsonSerializerOptions
+              {
+                  PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                  //we pass these options to our serialized methods and we'll just pass it (paginationHeader));
+
+              };
+            
+              response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationHeader, options));
+              //Once upon a time for custom headers which is what thi is u would specify
+               //Add("X-Pagination");//but there no requirement to do that anymore the only requirement is that u give ur header a sensible name.
+               //So we dont need to specify dash pagination // need to do is serialize this bcoz our response headrs when we ad this it takes a key & a string value 
+               // wha twe do is serialize this as jSon & we'll say 
+              // add our pagination to our response header 
+              response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
+              //("Access-Control-Expose-Headers",// this cant be anything u want it to be this has to be spelled exactly as it spelt here Same goes for pagination 
+              //This needs to match the name of the header that u're returning from this // So foreboding is forearmed in this case 
+              // bcoz we r adding a custom header we need to add a cause header onto this to make thi header available// "Pagination"// 
+              
+              //  what do do create a new class so that we can receive tha pagination parameters from the user bcoz in our user controller what we currently 
+              //we can receive the pagination parameters from the user bcoz in our user controller what we currently      
+          }
+    }
+}

@@ -27,7 +27,13 @@ namespace API.Services
         {
             var claims = new List<Claim>///start of with identifying what claims what we put inside the token 
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)// adding our claims 
+                // new Claim(JwtRegisteredClaimNames.NameId, user.UserName)// adding our new claims we r settig the name ID to the user's UserName//but we r going to change during action filters 
+            //we can useit either or really butthe name Id is the only ID claim name tha twe really have acces to //Options we have then there's no specify Id field we do have a nameID & we also got a uniqueName property 
+            new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),// after change now we have to go to our claims principle extension 7 update that bcoz we r going to need to change that inside 
+            
+            // we use the unique name for the username & we'll use the nameID for the users ID whic is going to be the end 
+            //set userID & bcoz the Id is an integer & claims have to be string then we r also going to set this using the two string property 
             };
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
             var tokenDescriptor = new SecurityTokenDescriptor

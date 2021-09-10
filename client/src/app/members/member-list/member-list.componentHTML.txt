@@ -1,59 +1,45 @@
  <div class="text-center mt-3">
      <h2> Your matches - {{pagination?.totalItems}} found</h2>
+     <!-- {{pagination.totalItems}}<//we may not have this id we dont have pagiantion when our component loads bcoz remember the order of-->
+     <!-- things the angular is going to construct our components & our view Our templete is going to get constracted before we receive the data bcoz ther's going to be what we've already added the delay for sure to our API -->
+     <!--what we can do we can also just specify te optional changing parameter here ? we r not going to get an eroor if we dont have the total items when thi sis constracted what we will have is a blank where this is -->
+     <!--it might not be ideal & u might want to change this to a comditional at the top but then it's going to push your page down woodenness that does load in -->
+    <!--what we can do found {{pagination?.totalItems}} found </h2>-->
     </div>
 
-    <div class="container mt-3"><div class="form-inline d-flex align-items-center">
-        <form #form="ngForm" class="d-flex justify-content-center mb-3" (ngSubmit)="loadMembers()" autocomplete="off">
-            <div class="form-group px-1">
+    <div class="container mt-3">
+    <!--//simple form to use to give the user some selction options but we will use a template form for this & we'll just call it form equal to entry form-->
+        <form #form="ngForm" class="form-inline mb-3" (ngSubmit)="loadMembers()" autocomplete="off">
+            <div class="form-group">
                 <label>Age from:</label>
                 <input type="number" class="form-control" style="width: 100px;"
                  name="minAge" [(ngModel)]="userParams.minAge">
+                <!--// bcoz we r going to be using the ngMpdel inside here for 2 way binding we need to give this input a name & -->
             </div>
-            <div class="form-group">
+            <div class="form-group px-2">
                 <label>Age to: </label>
                 <input type="number" class="form-control ml-1" style="width: 100px;"
                  name="maxAge" [(ngModel)]="userParams.maxAge">
+                <!--// bcoz we r going to be using the ngMpdel inside here for 2 way binding we need to give this input a name & -->
             </div>
 
-            <div class="form-group px-1">
-                <label>Show:</label>
-                <select name="gender" style="width:100px;" [(ngModel)]="userParams.gender" class="form-control ml-1">
+            <div class="form-group py-2">
+                <label>Show: </label>
+                <select name="gender" style="width:130px;" [(ngModel)]="userParams.gender" class="form-control ml-1">
                 <option *ngFor="let gender of genderList" [value]="gender.value">
                     {{gender.display}}
                 </option>
+                <!--*ngFor="let gender of genderList" [value]></option>// this is the value that's going to be output's when we select this & value going to be the gender dot value -->
                 </select>
             </div>
-            
+        
             <button class="btn btn-primary ml-1" type="submit">Apply Filters</button>
             
-            <button (click)="resetFilters()" class="btn btn-info" type="submit">Reset Filters</button> 
-            
-            
-                <div class="btn-group float-right px-5">
-                    <button 
-                    type="button" 
-                    class="btn btn-primary"
-                     name='orderBy'
-                     (click)="loadMembers()"
-                     btnRadio='lastActive'
-                      [(ngModel)]="userParams.orderBy"> Last Active</button>
-    
-                      <button 
-                    type="button" 
-                    class="btn btn-primary"
-                     name='orderBy'
-                     (click)="loadMembers()"
-                     btnRadio='created'
-                      [(ngModel)]="userParams.orderBy"> Newest Members</button>
-                </div>
-
-            
-            
-            <!-- btnRadio='lastActive'// bcoz we r using ngx button-->
-            <!--bcoz we r inside the context of a form then we need to specify button type here we dont click this when or we dont submit when we click on this -->
-        <!--this both button gonna to call the loadMembers & they r both gonna update the userParams orderBy & set the value to what we have inside the button radio-->
+            <!-- ml-1" type="submit">// this is going to aloow the user to select a filter & then just press return or they can click the button itself-->
+            <button (click)="resetFilters()" class="btn btn-info ml-1" type="submit">Reset Filters</button>
+            <!-- <button (click)="resetFilters()" //give this a click event -->
+                
         </form>
-    </div>
     </div>
 
 <p>member-list works!</p>

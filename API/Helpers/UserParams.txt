@@ -1,0 +1,24 @@
+//what we need dto do here is we r going to set a maximum page size 
+//whats the most amount of things tha we r ever going to return from a request ?
+//ANS//
+namespace API.Helpers
+{
+    public class UserParams
+    {
+        private const int MaxPageSize = 50;
+        public int PageNumber { get; set; } = 1; //
+
+        private int _pageSize = 10; 
+        // this is going to be our default page size 
+        //so what we need to do is give ourselves another property insdie here but we r gping to set it to ten by default but we r also going to set it to
+        //ten by default but we r also going to compare against the maximum page size so tat if the client chooses a diferent value from 10 then we want to compare against the maximum page
+        // then it over this //MaxPageSize = 50;// then we r going to set it to 50 
+        
+        public int PageSize
+        {
+            get => _pageSize;// going to get the current page size what we have inside page size 
+            set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value; // when we set htis property we will take our page size take value if than the max page signs 
+             // whatever happens its going to be a maximum of 50 so thses are our helper classes 
+        }
+    }
+}
