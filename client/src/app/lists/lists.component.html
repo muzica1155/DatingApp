@@ -1,1 +1,42 @@
 <p>lists works!</p>
+<div class="text-center mt-3">
+    <h2>{{predicate === 'liked' ? 'Members I Like' : 'Members who Like me'}}</h2>
+    <!--<h2>{{}}</h2>//c heck to see what predicate is & if the predicate is liked?-->
+</div>
+<div class="container mt-3">
+    <div class="row">
+        <!--we use r radio buttons that we get from ngx bootstrap-->
+        <div class="btn-group" name="predicate">
+            <button class="btn btn-primary" btnRadio="liked"
+             [(ngModel)]="predicate" (click)="loadLikes()">Members I like</button>
+
+             <!--for this 1 we set the radio button two liked by -->
+             <button class="btn btn-primary" btnRadio="likedBy"
+             [(ngModel)]="predicate" (click)="loadLikes()">Members who like me</button>
+
+        </div>
+    </div><!--row-->
+    <div class="row d-flex justify-content-center m-3 ">
+        <div class="col-2" *ngFor="let member of members">
+            <!--"col-2" *ngFor="let item of list">// so that we can loop over our members & we'll say that member of members -->
+           <app-member-card [member]="member"></app-member-card><!--[member]="member">// pass doen member to member -->
+            <!--make use of <app-member-card>-->
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+    <pagination
+     [boundaryLinks]="true"
+     [totalItems]="pagination.totalItems"
+     [itemsPerPage]="pagination.itemsPerPage"
+     [(ngModel)]="pagination.currentPage"
+     (pageChanged)="pageChanged($event)"
+            previousText="&lsaquo;"
+             nextText="&rsaquo;"
+              firstText="&laquo;"
+               lastText="&raquo;">
+ 
+</pagination>
+
+</div>

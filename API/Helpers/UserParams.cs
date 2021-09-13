@@ -1,19 +1,16 @@
 namespace API.Helpers
 {
-    public class UserParams
+    public class UserParams : PaginationParams
     {
-        private const int MaxPageSize = 50;
+        // private const int MaxPageSize = 50;
 
-        public int PageNumber { get; set; } = 1;
-        private int _pageSize = 10;
-        public int PageSize 
-        {
-            get => _pageSize;
-            set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
-
-        }
+        // public int PageNumber { get; set; } = 1; private int _pageSize = 10; public int PageSize { get => _pageSize; set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
         //setuo a default gender to return which is going to be opposite of the currently logged in users gender 
         //excluding this particular use as well from what we return 
+   
+   // : PaginationParams
+        //now we can derive from the pagination params & now our users r back to how they were before but we can use this for our likes program as well
+        //
         public string CurrentUsername { get; set; }
         public string Gender { get; set; }
 

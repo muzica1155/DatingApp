@@ -42,11 +42,18 @@ namespace API.Entities
         //method in our entity file for age of the customer 
         //property
         
-        // public int GetAge()
+        // public int GetAge() // this were remove it were had nice idea that didn't have desired effect 
         //  { 
         //      return DateOfBirth.CalculateAge();// extend the functionality of the dattime clas so that we can calculate the age based on this date of birth 
         //      //now u cant get somebody age based on the date of birth by our entity 
         //      }
+        public ICollection<UserLike> LikedByUsers { get; set; }// give name to under that works bcos these kind of relationships they can be smthimes a bit tricky
+        // to get ur head around like their follewers & following relationships that u see in twitter bcoz this is self referencing 
+        //we need a way to identify what these collections means
+        // this is the list of users that like the currently logged in user & this is the list of users that r currently logged in user has liked 
+        //that's the way this relationship  goingt to work 
+        // also need to do go head  & configure these entities in DataContext.cs
+        public ICollection<UserLike> LikedUsers { get; set; }
 
         
 

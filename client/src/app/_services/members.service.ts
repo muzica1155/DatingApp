@@ -295,6 +295,43 @@ if (member) // if we do we r going to return of an passing a member
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);//Concatenated ur photo straight on to the this method here//'users/delete-photo/' + photoId);// 
   }
 
+  //add 3 new methods for likes member 
+  addLike(username: string) {
+    return this.http.post(this.baseUrl + 'likes/' + username, {})//username & this is what we used to like a user now bcoz this is a post we do need to add an empty object in this case
+  // htis matches exactly what we r doing in postman 
+  }
+
+  //add a method to get likes & were going to take the predicate in as
+  // getLikes(predicate: string)
+  
+  getLikes(predicate: string, pageNumber, pageSize)
+
+  {
+    let params = this.getPaginationHeaders(pageNumber, pageSize);// what we can pass in  page number & page size now do we create another class like we did for our
+    //params or do we do smthing different bcoz we only need 3 tings here? we need a predicate, page number, pageSize
+    //skip creating the clss in this case we can go but we add these properties to the member or to the list component directly &
+    //will add inside here predicate will take in the pageNumber & pageSize
+    //getPaginationHeaders()// specify the page number& the page size inside here & 
+
+    params = params.append('predicate', predicate);
+    // also append('')// we need to specify the predicate & we r going to set this equal to the predicate that we r getting in our parameters here
+
+  //  return this.http.get(this.baseUrl + 'likes?=' + predicate)//likes?//we wont use http to be Params at this stage add on the predicate to the url & like ?= that going to be either liked or liked by which is what we'll use for the prediccate 
+  
+  // return this.http.get<Partial<Member[]>>(this.baseUrl + 'likes?predicate=' + predicate); // we update this for liked list// we e going to gice this a hint about what it's returning
+  
+  // in this case it;s going to be returning Partial & member array
+    //we r just going to get our members & we r passing the predicate directly onto the query string// now we need to pass in 
+    //pagination headers as well take a look what we r doing for our get members then we have a method to go & get our 
+
+    // this.getPaginationHeaders & also got method to return paginated resulkt as well//getPaginatedResult<Member[]>//
+
+    return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl + 'likes', params);//that we need to doin the service //from here we r going to list componenet  
+    //  // we also need to do with our paginated results was give this a type & we'll say partial in members.service.ts 
+    // this should take care of the error tat we r seeing inside our lists componennt
+
+  }
+
   private getPaginatedResult<T>(url, params) 
   
   {

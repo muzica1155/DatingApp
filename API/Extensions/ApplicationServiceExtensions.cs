@@ -24,6 +24,7 @@ namespace API.Extensions
             //ADDTransient//whic is useful only Always means that services is going to be created and destroyed  as soon as method is finished and this one is normally considered not quite right for an http request this not APPROpriate  
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
+            services.AddScoped<ILikesRepository, LikesRepository>();
             services.AddScoped<IUserRepository, UserRepository>(); //add service for our repository services at scoped
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly); //auto mapper to find those profile the crete maps that we creted map inside this class and thats the configuration set up for automator
             services.AddDbContext<DataContext>(options =>

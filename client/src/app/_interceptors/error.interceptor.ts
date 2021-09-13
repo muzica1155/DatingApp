@@ -30,9 +30,18 @@ export class ErrorInterceptor implements HttpInterceptor {
                throw modalStateErrors.flat();// throw the modelStateError back to the component reason;- bcoz if we take our registration form what we have to do in register link if we get some error bak from the api it not really suitable to display a toast but ok is to display list of validation errors underneath the form 
             }//if we have an array of arrays then we can flatten them using the flat method so we take our 
             // why cant we use it 
-            else // we'll check the other situation if its just a normal 400 error then underneath thi if statement if toast 
+            // else // we'll check the other situation if its just a normal 400 error then underneath thi if statement if toast 
+            else if (typeof(error.error) === 'object') // only if the error object is an object 
+            // to check to see if smthing is an object is we can specify and else if in this case we say typeOf & an error
+            //(error.error) === 'object')//thi is how we can check to see if smthing is an object bcoz the othe case that we'll just put 
+            //inside & else 
             {
               this.toastr.error(error.statusText, error.status);                     
+            }
+            else
+            {
+              this.toastr.error(error.error, error.status);//we know that this at this stage this is going to be a string we do here
+               //what they should mean is that our error behave correctlynow
             }
             break;
             case 401: 
