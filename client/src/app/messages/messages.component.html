@@ -1,1 +1,124 @@
-<p>messages works!</p>
+<!--<p *ngFor="let message of messages">{{message?.content}}</p>-->
+<!--add ? to avoid any inevitable errors bcoz we r not doing any checking on here to se if er have got anything at this stage -->
+<!--just loop through themessages that we have & -->
+<div class="row justify-content-center">
+    <div class="btn-group" name='container'>
+        <button class="btn btn-primary" btnRadio='Unread' [(ngModel)]="container"
+         (click)="loadMessages()">
+        <i class="fa fa-envelope"></i> Unread
+        </button>
+        <button class="btn btn-primary" btnRadio='Inbox' [(ngModel)]="container"
+         (click)="loadMessages()">
+        <i class="fa fa-envelope-open"></i> Inbox
+        </button>
+        <button class="btn btn-primary" btnRadio='Outbox' [(ngModel)]="container"
+         (click)="loadMessages()">
+        <i class="fa fa-paper-plane"></i> Outbox
+        </button>
+    </div>
+</div>
+
+<!--check to see if we have any messages//*ngIf="messages?.length === 0">// check to see if we have no messages basically-->
+<div class="row" *ngIf="messages?.length === 0">
+    <h4>No messages</h4>
+</div>
+
+<!--"table table-hover" style="cursor: pointer">// they can look on smthing when they're hovering over this particular table row or any table row -->
+<!---->
+<div class="row" *ngIf="messages?.length > 0">
+    <table class="table table-hover" style="cursor: pointer">
+    <tr>
+        <th style="text-align: center;" >Message</th>
+        <th style="width: 10">From / To</th>
+        <th style="width: 20">Sent / Received</th>
+        <th style="width: 20"></th>
+
+    </tr>
+    <!--this is where we display the messages// routerLink='{{}}'>// add interpellation bcoz we want to check to see if which container we r in bcoz we ever want -->
+    <!--to go to the recipient or the sender & we dont want to go to ourselves we want to go the other user check the container see if its equal to outbox-->
+    <!--{{container === "Outbox" ?}}'// we need double quotes inside & single quotes on the outsides// ? add a ternary operator &if it is the outbox then we want to go the recipient username -->
+    <!--Who have we sent thismessage to ? & that's waht we r check for -->
+    <!--if they click on the table role will be taken to the users smthing well at waht we r check for the moment tey'll be takne to their profile -->
+    
+    <!--if we r loading we r gonna hide what in this table row we r still gonna keep our table header as they switch between the differn option-->
+    <tr [hidden]="loading" *ngFor="let message of messages" 
+    routerLink='{{container === "Outbox"
+     ? "/members/" + message.recipientUsername 
+     : "/members/" + message.senderUsername }}' [queryParams]='{tab: 3}'>
+     <td>
+         <p style="text-align:center">{{message.content}}
+             </p>
+         </td>
+     <!--<td> table delimiters-->
+         <td>
+             <!--checkt to see is the container is equal to outbox once again -->
+             
+             <div *ngIf="container === 'Outbox'">
+                 <img 
+                 class="img-circle rounded-circle m-2"
+                 src="{{message.recipientPhotoUrl || './assets.user.png'}}"
+                  alt="{{message.recipientUsername}}">
+                  <strong>{{message.recipientUsername | titlecase}}</strong>
+                  <!--say messageSender dont send the knownAs or send a username in this case we didn't send down the knownAs property we could do stick with username -->
+    <!--go titlecase in this case obviously if u wa to known as instead u can of course send down the name as property alog with the messages its easiery enough to do -->
+
+   
+             </div>
+
+              <!--we r going to check to seee if the container is not equal to outbox this time & -->
+             <div *ngIf="container !== 'Outbox'">
+                <img 
+                class="img-circle rounded-circle m-2"
+                src="{{message.senderPhotoUrl || './assets.user.png'}}"
+                 alt="{{message.senderUsername}}">
+                 <strong>{{message.senderUsername | titlecase}}</strong>
+                 <!--If is not = to outbox thenwe want to show the sender photo Url & this is going to be -->
+   <!--go titlecase in this case obviously if u wa to known as instead u can of course send down the name as property alog with the messages its easiery enough to do -->
+   
+   <!---->
+            </div>
+        </td>
+        <!--we want to display the photo of the users & we need to also conditionally display whether or not let the sender or the recipient -->
+       <td>{{message.messageSent | timeago}}</td>
+         <!---->
+         <td>
+             <button (click)="deleteMessage(message.id)" class="btn btn-danger" (click)="$event.stopPropagation()">Delete</button>
+             <!--Now we dont have te fucntionality yet but we will do later // from here i go to member-list component -->
+             <!-- we need to take care of here for table row we got a route link <tr [hidden]="loading"//So when we click on the row even if we click on the button then it's gona to attempt to root us to the member detail componenet-->
+       <!--we dont want that we want them to when they click on th button just delete te message Dont reach us at the same time -->
+       <!--add a 2nd click event to this button & we r going to set this equal to & then we say dollar event-->   
+       <!--="$event.stopPropagation"// just ensures that we we dont also root at the same time as is deleting the messages here so let's-->
+       <!--go & test -->      
+         </td>
+    </tr>
+    </table>
+</div>
+<!--we copied 7 pasted before there's very ittle benefit i found to making this a shared component bcoz of the nO of thingd that u have to padd to-->
+<!--Even if we did make it shared & made it reusable we r not gaining anyting bcoz we have to do a lot of passing in of the properties anyway-->
+<!--So we end up with a reusable componenttha's about the same size as what we r using here-->
+<!--!loading">// we r only gonna display the pagination info if we r not actuallu loading -->
+<div class="d-flex justify-content-center" *ngIf="pagination && !loading">
+    <pagination
+     [boundaryLinks]="true"
+     [totalItems]="pagination.totalItems"
+     [itemsPerPage]="pagination.itemsPerPage"
+     [(ngModel)]="pagination.currentPage"
+     (pageChanged)="pageChanged($event)"
+            previousText="&lsaquo;"
+             nextText="&rsaquo;"
+              firstText="&laquo;"
+               lastText="&raquo;">
+</pagination>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+

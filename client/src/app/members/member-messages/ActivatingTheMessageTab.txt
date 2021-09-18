@@ -1,0 +1,84 @@
+when the messages were loading when we r not actually clicking on our messages tab but our message is,
+is a clild component of our member detail page & when our member detailed page is constructed it also 
+constracts the child inputs as well 7 bcozi our child input in the ngOnINt we 've got a call to load meaages thats
+what going on in our member details component So we wna to control that we dnt want to load the message untill we know 
+for sure what sm1 clicked on this particular tab 
+let resolve 
+take a look at member-details.component.html
+tab heading= 'Messages'>
+           <app-member-messages [username]="member.username"></app-member-messages>
+           <!--just ot provide username property here & set this to member username -->
+        </tab>
+
+ this is the tab we r interested in & we need to know if this has been clicked on & we r using this tabset component
+
+ <tabset class="member-tabset">
+
+ Inside our member detail component & if we take a look at the member details component itelf 
+
+ NOW TAKE A LOOK AT member-detail.component.ts 
+
+ smthing that we used earlier on if we wanted to get hold of an element insdie our component code the template then we use template reference 
+ variable  
+ what  i m gonna do add a template reference variable to the tabset itself
+
+ take a look at member-details.component.html
+
+
+ <tabset class="member-tabset" #memberTabs>
+
+///////
+ Then member-details.component.ts
+
+
+In our properties here bcoz it got decorator im just going to out it at the top & we can use View child to go & get the memberTabs
+
+export class MemberDetailComponent implements OnInit {
+@ViewChild()
+
+activeTab: TabDirective;//so each 1 of our temps inside here we 've got a tp directive specifically for as well & what 
+
+ take a look at member-details.component.html
+
+ <tab heading= 'Interests'>
+
+ </tab>
+
+ Create a method inside our component & we'll just go down to the bottom here 7 we'll create a 
+ Then member-details.component.ts
+
+ if (this.activeTab.heading === 'Messages') // we r gonna access the heading property inside the tab for our messages 
+
+ this is the heading <tab heading= 'Messages'>
+
+
+
+ take a look at member-details.component.html
+
+
+take a look at member-details.component.html
+
+<!-- <app-member-messages [username]="member.username"></app-member-messages> -->
+
+after chaing this into this 
+
+<app-member-messages [messages]="messages"></app-member-messages>
+
+now each o fthis tabs bcoz we've crated a method inside our member details component called on tap activated 
+
+we ned to do insdie our member details component.html here
+
+for each 1 of this tabs we need to say we'll give it a click event called select tab 
+
+    <tab heading= 'About {{member.knownAs}}' (selectTab)="onTabActivated($event)"> evnt for this particular method 
+    so our select tab will pass throughthe event & inside that event is the top directive  that wehave access to 
+
+    copy the// (selectTab)="onTabActivated($event)"> // 
+
+    & add to each of the heading tab elements
+
+
+
+
+
+

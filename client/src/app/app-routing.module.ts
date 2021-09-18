@@ -11,6 +11,7 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { MessagesComponent } from './messages/messages.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
+import { MemberDetailedResolver } from './_resolvers/member-detailed.resolver';
 
 const routes: Routes = [
   { //when user browsers to localhost for 200 directly then this component will open // HomeComponent// will be loaded
@@ -24,7 +25,9 @@ const routes: Routes = [
     // { path: 'members', component: MemberListComponent, canActivate: [AuthGuard]},///
     { path: 'members', component: MemberListComponent},
     // { path: 'members/:id', component: MemberDetailComponent}, //each members is going to have a root parameter and added a placeholder
-    { path: 'members/:username', component: MemberDetailComponent},
+    { path: 'members/:username', component: MemberDetailComponent, resolve: {member: MemberDetailedResolver}},//changes afte root resolvers //
+    //give it a key that is member resolve: {member:}},//member this is what we r gonna use to access the data inside this particular resolver
+    // & from here we'll able to do is go to our component & get the data from inside our route 
     { path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard]}, //to use members then u would need to use that path match full to actually to activate this particular component so we can adjust us member/edit for appropriate route to use 
     //when we browser to members one or members two, then we r going ro load up the member details components 
     { path: 'lists', component: ListsComponent},

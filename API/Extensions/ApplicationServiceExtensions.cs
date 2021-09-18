@@ -23,6 +23,7 @@ namespace API.Extensions
             //when the request is finished with the services it disposed this one is going to use all the time 
             //ADDTransient//whic is useful only Always means that services is going to be created and destroyed  as soon as method is finished and this one is normally considered not quite right for an http request this not APPROpriate  
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<IMessageRepository, MessageRepository>();///next implementation methods for this bcoz we got a big MessageDto we r going to use automapper 
             services.AddScoped<LogUserActivity>();
             services.AddScoped<ILikesRepository, LikesRepository>();
             services.AddScoped<IUserRepository, UserRepository>(); //add service for our repository services at scoped

@@ -1,0 +1,81 @@
+<!-- <p *ngFor="let message of messages">{{message?.content}}</p> -->
+<!--{{message?.content}}// add the optional chaining operator bcoz we r not doig any checking inside here -->
+
+<div class="card">
+    <div class="card-body">
+        <div *ngIf="messages?.length === 0">
+        <!--check to see if there is any messages//<div *ngIf="messages">// check the messages  we'll add te ? & say Ok lenght is equal to zero-->
+        <!--if it is no messages-->
+        No messages Yet... say hi by using the messages box  below
+        </div>
+        <!--if we do have messages we add unorder list-->
+        <ul *ngIf="messages?.length > 0" class="chat">
+            <!--then we can display this content so we'll add some a list item & loop over our messages-->
+            <li *ngFor="let message of messages">
+                <div>
+                    <span class="chat-img float-right">
+                        <img class="rounded-circle" src="{{message.senderPhotoUrl || './assets/user.png/'}}"
+                         alt="{{message.senderUsername}}">
+                        <!--src="{{}}"//thisis gonna be depending on who we r looking at here r we looking at Descender or r we looking at the recipient -->
+                        <!--In all cases this is going to be the message//src="{{messages.senderPhotoUrl ||}}"// in case if they dont have the photo just add our place holder here-->
+                    </span>
+                    <!--once again this is our styling & we'l say -->
+                    <div class="chat-body">
+                        <div class="header">
+                            <small class="text-muted">
+                                <!--this is going to be the dates of when the messsage was actualy send -->
+                                <span class="fa fa-clock-o">{{message.messageSent | timeago}}</span>
+                                <!--we check to see if the users read the message & if they haven't will display & Unread -->
+                                <!--We'll add another span below this to show u the date & time that the message was actually read-->
+         <!--we give conditional we want to check here if the message & we r usually not operator ! so we r looing for ig the message & date read & -->
+                         <!--bcoz we r not interested in whether ot not we r read our own messages we r not going to display that info-->
+                         <!--it;s only if the other person has read the messages that we wnat ot display less-->      
+                                <span class="text-danger" *ngIf="!message.dateRead
+                                 && message.senderUsername !== username">
+                                 (unread)
+                                 <!--gonna put text inside this  blackets & these breacket dont mean anything  just gonna be displayed in the page this is just the plaintext say that the messge is unread -->
+                                </span>
+                                <!--check to see if the messages is read so turn off that & say message.dateRead -->
+                                <span class="text-success" *ngIf="message.dateRead
+                                 && message.senderUsername !== username">
+                                 (read {{message.dateRead | timeago}})
+                                 
+                                </span>
+                            </small>
+                        </div>
+                        <p>{{message.content}}</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+</div>
+<div class="card-footer">
+    <!--Add a form just lay out the structure of the email we r not gonna implement this functionality yet -->
+    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
+        <!--just use a template from for this bcoz this is gonna be the simplest form-->
+        <div class="input-group">
+            <!--name="messageContent"// the same name that added in the parameter or the property inside component will say thsat-->
+            <!--required // we r not looked at template form validation but template forms respect te required property that we can put inside & input will add ngmodel bcoz we want to be binding for this -->
+            <!---->
+            <input 
+            name="messageContent"
+            required 
+            [(ngModel)]="messageContent"
+            type="text" 
+            class="form-control input-sm" placeholder="Send a private message">
+            <div class="input-group-append">
+                <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit">Send</button>
+                <!--check to see if the form is valid & if it is as in they've got smthing inside the message content then we'll set this to disabled -->
+            <!--check the status of the message form & see if it's valid & if it isn't then we r turning off that functionality-->
+            <!--also do bcoz once they've sent a message & it's been successful then we want to reset the form so that we clear the content inside that -->
+            <!-- to do that we gonna need to go to our message component & use the ciew child to get access to the message form from our component add @ViewChild-->
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+
+
+
+
+

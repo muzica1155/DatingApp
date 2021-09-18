@@ -10,6 +10,7 @@ import { PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
 import { UserParams } from '../_models/userParams';
 import { AccountService } from './account.service';
+import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({ 
@@ -104,7 +105,8 @@ export class MembersService {//services are singleton they're instantiated when 
 
   
 
-     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);// after pagination
+    //  let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);// after pagination
+     let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
      
      params = params.append('minAge', userParams.minAge.toString());// // pass in this ones that we wnat to adjust for this specific method // what our params r going to be for this is we r going to have a middle age & this is going to 
      
@@ -156,11 +158,11 @@ export class MembersService {//services are singleton they're instantiated when 
    
     // return this.newMethod(params)
 
-
-
-    return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params)// we have to give this type parameters bcoz we specified a type here //getPaginatedResult<T>(url,// 
+    // return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params)// we have to give this type parameters bcoz we specified a type here //getPaginatedResult<T>(url,// 
     //we need to tell it what type of pagiantedResult we r getting from this 
- 
+
+    return getPaginatedResult<Member[]>(this.baseUrl + 'users', params, this.http)
+
        // caching after pagination
        //we use a dot & then pipe 
        // so the idea is that we go to our API we go & get our Members if we dont have them in our cache 
@@ -307,11 +309,13 @@ if (member) // if we do we r going to return of an passing a member
   getLikes(predicate: string, pageNumber, pageSize)
 
   {
-    let params = this.getPaginationHeaders(pageNumber, pageSize);// what we can pass in  page number & page size now do we create another class like we did for our
+    // let params = this.getPaginationHeaders(pageNumber, pageSize);// what we can pass in  page number & page size now do we create another class like we did for our
     //params or do we do smthing different bcoz we only need 3 tings here? we need a predicate, page number, pageSize
     //skip creating the clss in this case we can go but we add these properties to the member or to the list component directly &
     //will add inside here predicate will take in the pageNumber & pageSize
     //getPaginationHeaders()// specify the page number& the page size inside here & 
+
+    let params = getPaginationHeaders(pageNumber, pageSize);
 
     params = params.append('predicate', predicate);
     // also append('')// we need to specify the predicate & we r going to set this equal to the predicate that we r getting in our parameters here
@@ -326,58 +330,67 @@ if (member) // if we do we r going to return of an passing a member
 
     // this.getPaginationHeaders & also got method to return paginated resulkt as well//getPaginatedResult<Member[]>//
 
-    return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl + 'likes', params);//that we need to doin the service //from here we r going to list componenet  
+    // return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl + 'likes', params);//that we need to doin the service //from here we r going to list componenet  
     //  // we also need to do with our paginated results was give this a type & we'll say partial in members.service.ts 
     // this should take care of the error tat we r seeing inside our lists componennt
 
+    return getPaginatedResult<Partial<Member[]>>(this.baseUrl + 'likes', params, this.http);
+
   }
+////////////////////////////////////////////////////////////////
+////////this code is commented for the message module///////////////
+///////// bcoz we r going to need pagination for message.service.ts for this & we dont have the access to our methods inside here //
+///////bcoz we created them as private method inside out member service /////////////////////////////////////////
+/// what we could do take this 2 methods & put them into their own file but we need to think about 1 thing here that the paginated result//
+//bcoz we need to use the Http //this.http.get<Member[]>//
+// We can pass in http as a parameters inside this methods params //private getPaginatedResult<T>(url, params) ////
+//then our service should injecting that then we could use that as a parameter in here ! way to go about it //copy & paste our member service
+// pasted in paginationHelper.ts
 
-  private getPaginatedResult<T>(url, params) 
-  
-  {
 
-    const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();//set up a property for our patinated results // take our class parameters of our paginatedResult
+//   private getPaginatedResult<T>(url, params) 
+//   {
+//     const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();//set up a property for our patinated results // take our class parameters of our paginatedResult
 
-    //const paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>();
+//     //const paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>();
 
-    // return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).pipe(
-      return this.http.get<T>(url, { observe: 'response', params }).pipe( //we will make this generic swap this this.http.get<Member[]>(this.baseUrl + 
-      //return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).pipe(
-        map(response => {
-        // this.paginatedResult.result = response.body;
-        paginatedResult.result = response.body;
+//     // return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).pipe(
+//       return this.http.get<T>(url, { observe: 'response', params }).pipe( //we will make this generic swap this this.http.get<Member[]>(this.baseUrl + 
+//       //return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).pipe(
+//         map(response => {
+//         // this.paginatedResult.result = response.body;
+//         paginatedResult.result = response.body;
 
-        if (response.headers.get('Pagination') !== null) {
-          // this.paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
-          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+//         if (response.headers.get('Pagination') !== null) {
+//           // this.paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+//           paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
 
-        }
-        // return this.paginatedResult;
-        return paginatedResult;
+//         }
+//         // return this.paginatedResult;
+//         return paginatedResult;
 
-      })
-    );
-  }
+//       })
+//     );
+//   }
 
- ////get<Member[]>(this.baseUrl//only need to specify the type in our request to tell it what we r receiving back from the server
+//  ////get<Member[]>(this.baseUrl//only need to specify the type in our request to tell it what we r receiving back from the server
  
- private getPaginationHeaders(pageNumber: number, pageSize: number)// for easy to access 
- {// what we going to reutnr from this is the Params
-  let params = new HttpParams(); // ability toserialize our parameters & thi is going to take care of adding this on to our query string
+//  private getPaginationHeaders(pageNumber: number, pageSize: number)// for easy to access 
+//  {// what we going to reutnr from this is the Params
+//   let params = new HttpParams(); // ability toserialize our parameters & thi is going to take care of adding this on to our query string
   
-  // //bcoz we r initialzing the page number and a page size we dont need to check to see if we 
-  // if (page !== null && itemsPerPage !== null) 
+//   // //bcoz we r initialzing the page number and a page size we dont need to check to see if we 
+//   // if (page !== null && itemsPerPage !== null) 
       
 
-  // {//otherwise we r just goingt o stick with the default & let the server return what he wnat to 
-      //  params = params.append('pageNumber', page.toString()); //('pageNumber')// this is our query string 
-      params = params.append('pageNumber', pageNumber.toString());
-//page.toString());//query string is a string we neeed to make th epage .toString()
-      //  params = params.append('pageSize', itemsPerPage.toString());
-      params = params.append('pageSize', pageSize.toString());
-
-      return params;
-      }
+//   // {//otherwise we r just goingt o stick with the default & let the server return what he wnat to 
+//       //  params = params.append('pageNumber', page.toString()); //('pageNumber')// this is our query string 
+//       params = params.append('pageNumber', pageNumber.toString());
+// //page.toString());//query string is a string we neeed to make th epage .toString()
+//       //  params = params.append('pageSize', itemsPerPage.toString());
+//       params = params.append('pageSize', pageSize.toString());
+//       return params;
+//       }
 
 
 }//get<Member[]>(this.baseUrl//only need to specify the type in our request to tell it what we r receiving back from the server

@@ -55,6 +55,9 @@ namespace API.Entities
         // also need to do go head  & configure these entities in DataContext.cs
         public ICollection<UserLike> LikedUsers { get; set; }
 
+        public ICollection<Message> MessagesSent { get; set; }//add additional 2 collections & we'll say I collections
+        public ICollection<Message> MessagesReceived { get; set; }// now we r going to need to go to our data context & configure 
+
         
 
 

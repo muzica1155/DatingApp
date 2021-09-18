@@ -26,7 +26,17 @@ namespace API.Helpers
             CreateMap<RegisterDTo, AppUser>();//create a new mapping to go from [registeration form]
             // CreateMap<RegisterDTo, AppUser>();// this means we dont really need to map the properties htat we r receiving in our account a controller
             
-            
+            CreateMap<Message, MessageDto>()// we wan to go from our message to our messageDto
+                 .ForMember(dest => dest.SenderPhotoUrl, opt => opt.MapFrom(src => 
+                 src.Sender.Photos.FirstOrDefault(x => x.IsMain).Url))
+            //inside here er r going to need to give this some configuration bcoz there's there a couple of properties or 1 property that
+            // we cannot get automaticaly to do for us & that's fr the use of it 
+            // we've got to go a few more levels deep in this particular case 
+            //& also need to stay the same for the recipients 
+            .ForMember(dest => dest.RecipientPhotoUrl, opt => opt.MapFrom(src => 
+                 src.Recipient.Photos.FirstOrDefault(x => x.IsMain).Url));
+                 // this i will save us typing out all of that mapping code & what we'l also do is we're going to create a DTO for the receiving
+                 //of a message as well While we r here lets setup out that we can then forcus on creatng that 
         }
     }
 }

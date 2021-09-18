@@ -15,6 +15,8 @@ namespace API.Data
         //we didn't add except for the photos bcoz we didn't really need to do anything with them need to do smthing with our likess 
         public DbSet<UserLike> Likes { get; set; } // we also need to do inside here is give the entities some configuration
         // the way we do that we need to override a method inside the DB context & WE achieve this we will say protected 
+
+        public DbSet<Message> Messages { get; set; }//add a DBset for the messages 
         protected override void OnModelCreating(ModelBuilder builder)// we say void bcoz we dont return anthing from this & then we call it 
         {
             base.OnModelCreating(builder);// bcoz we r overriding this method just pass into the class we r driving from & we get access to that using base 
@@ -36,13 +38,28 @@ namespace API.Data
               //.OnDelete(DeleteBehavior.Cascade);// when u r using NO SQL SERVER
               //& what we'll do bcoz the other 1 is similar im just going to copy this & we r going to be super careful about what we update insdie here 
         
-             builder.Entity<UserLike>() // this is the other sode of the relationship so instead of sourceUser this is going to be the LikedUser
+            builder.Entity<UserLike>() // this is the other sode of the relationship so instead of sourceUser this is going to be the LikedUser
               .HasOne(s => s.LikedUser)// A likedUser can have many liked by users & this is where the naming gets slightly tricky 
               //
               .WithMany(l => l.LikedByUsers)
               .HasForeignKey(s => s.LikedUserId) 
               .OnDelete(DeleteBehavior.Cascade); // double check & make sure its right bcoz if u start mixing up these diferent properties then it;s going tocause an issues when it comes to our queries 
               //& it might cause an issue with immigration as well 
+
+            builder.Entity<Message>()//then in our configuration for messages we wont give it a made up key like we did with the likes we to let the database 
+              .HasOne(u => u.Recipient)//generate this 
+              .WithMany(m => m.MessagesReceived)
+              .OnDelete(DeleteBehavior.Restrict);//bcoz we dont want to remove the message id the other party hasn't deleted them themselves
+
+              //we'll do then is do the other side of this relationship 
+
+            builder.Entity<Message>()
+              .HasOne(u => u.Sender)//this 1 is for the sender & Sender has many messahes sent & again we keep the delete behavior to restrict
+              //here 
+              .WithMany(m => m.MessagesSent)
+              .OnDelete(DeleteBehavior.Restrict);
+              // now we got our entity configured now& add migration
+              
         }
     }
 }

@@ -1,6 +1,16 @@
 <!-- <h1 *ngIf="member">{{member.knownAs}}</h1> -->
-<div class="row" *ngIf="member">
-    <!--use the grid system -->
+<div class="row">
+    <!--<div class="row" *ngIf="member">-->
+    <!--<div class="row" *ngIf="member">// what we have here conditional when angular loads this component & loads up thses tabs this doesn't happen until we have the member 7 achor whose first job is to constracts our template-->
+        <!--Our template is empty & inside our component code we got a view child full of the member temp's but when the component r bring constracted this is undefined// @ViewChild('memberTabs') membertabs: TabsetComponent;-->
+    <!--that y se r seeing the rsponse now in the view child we could do could give this a static property & say it's static & this doesn't solve our problem right away but what we ere using is a dynamic version of the child-->
+    <!--it's able to rect to changes in our component but not quickly enough to do what we r doing here ngonInit this.route.queryParams.subscribe -->
+    <!--if we add static & we go back 7 we take a look check again same problem bcoz of Ngif bcoz we made this static what we need to do now is remove the conditional remove the conditional check again-->
+    <!-- if u remove the conditionals u get more error the OPTION TO SOLVE IS THAT IS CLEANER OPTION IS ROUTE RESOLVERS-->
+    <!-- we could use the optional chaining so that we remove these messages but we will have bad experience as we load the user profile everything popin-->
+    <!--clean option route resolvers allow us toget access to the data before the component is constracted & that means that we can have everything we need when the component is constructed & we r not going see this error -->
+    <!--w still need to remove the conditional for the tab set we have to use the staic verison of ViewChild & we r gonna get our data for the member in a different way so that we remove all of this error -->
+        <!--use the grid system -->
     <div class="col-4">
         <div class="card" >
             <img src="{{member.photoUrl || './assets/user.png' }}" alt="{{member.knownAs}}" 
@@ -32,7 +42,8 @@
             <!--class="btn-group d-flex">//this means we going to use css flex box system -->
             <div class="btn-group d-flex">
                 <button class="btn btn-primary">Like</button>
-                <button class="btn btn-success">Message</button>
+                <button (click)="selectTab(3)" class="btn btn-success">Message</button>
+                <!--for our tab bassically they start from 0 & then go on bcoz this tabs r static theyr not going anywhere particularly complex with them just hard code 3 inside the parameters selectTab(3)-->
 
             </div>
         </div>
@@ -40,27 +51,30 @@
     </div>
 
     <div class="col-8">
-        <tabset class="member-tabset">
+        <tabset class="member-tabset" #memberTabs>
             <!--add some syling need to customize this tabset class we r talking about encupsulation this is the example of the componnet that hasn't tuned off excess encapsulation 
             they've encapsulated their own styles than give it a class & then we have to add the styles that we want in a global style aheet & then we can affect what 
         then we can affect whats inside here -->
-        <tab heading= 'About {{member.knownAs}}'>
+        <tab heading= 'About {{member.knownAs}}' (selectTab)="onTabActivated($event)">
             <h4>Description</h4>
             <p>{{member.introdution}}</p>
             <h4>Looking For </h4>
             <p>{{member.lookingFor}}</p>
         </tab>
-        <tab heading= 'Interests'>
+        <tab heading= 'Interests' (selectTab)="onTabActivated($event)">
             <h4>Interests</h4>
             <p>{{member.interests}}</p>
            
         </tab>
-        <tab heading= 'Photos'>
+        <tab heading= 'Photos' (selectTab)="onTabActivated($event)">
             <ngx-gallery [options]= "galleryOptions" 
             [images]="galleryImages" style=" display: inline-block; margin-bottom: 20px;"></ngx-gallery>
         </tab>
-        <tab heading= 'Messages'>
-            <p>Messages will go here</p>
+        <tab heading= 'Messages' (selectTab)="onTabActivated($event)">
+           <!-- <app-member-messages [username]="member.username"></app-member-messages> -->
+           <app-member-messages [messages]="messages" [username]="member.username"></app-member-messages>
+           <!--just ot provide username property here & set this to member username -->
+           <!--add hte -->
         </tab>
 
         </tabset>
