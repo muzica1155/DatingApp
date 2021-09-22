@@ -21,6 +21,11 @@
                 <li class="nav-item">
                   <a class="nav-link" routerLink='/messages' routerLinkActive='active'>Messages</a>
                 </li>
+                <!--* bcoz its a structural directive we use this * & then we say *appHasRole  & need to pass it the members or rolse that we r gonna allow-->
+        <!--*appHasRole='["Admin", "Moderator"]' thi sis how we use costom director -->
+                <li *appHasRole='["Admin", "Moderator"]' class ="nav-item">
+                  <a class="nav-link" routerLink='/admin' routerLinkActive='active'>Admin</a>
+                </li>
                 <!-- <li class="nav-item">
                   <a class="nav-link" (click)="logout()" href="#">Logout</a>
                 </li> -->
@@ -35,9 +40,10 @@
         <!-- <div class="dropdown" *ngIf="currentUser$ | async" dropdown> -->
           <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
             <img src="{{user.photoUrl || './assets/user.png'}}" alt="{{user.username}}">
-            <!--//$ | async) as user//we can now use this property as the user inside our code just like any other property we r got out of our observable & now it's usbale as just our user  -->
+            <!--//$ | async as user//we can now use this property as the user inside our code just like any other property we r got out of our observable & now it's usbale as just our user  -->
             <!-- automatically unsubscribe if our nav component is no longer visible or in use, doesn't really work for us have component thinking good example of async pipe  -->
-        <a class="dropdown-toggle text-light m-2"  dropdownToggle>Welcome {{user.knownAs | titlecase}}</a> <!--angular pipes give us some functionality & one of the pipes is title case & what this will do is take user name -->
+        <a class="dropdown-toggle text-light m-2"  dropdownToggle>Welcome {{user.knownAs || user.username | titlecase}}</a> <!--angular pipes give us some functionality & one of the pipes is title case & what this will do is take user name -->
+        <!--|| user.username// for admin -->
         <!--{{user.username | titlecase}}//{{user.knownAs | titlecase}}<-->
         <div class="dropdown-menu mt-3" *dropdownMenu>
           <a routerLink='/member/edit' class="dropdown-item">Edit Profile</a>

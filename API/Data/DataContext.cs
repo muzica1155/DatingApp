@@ -1,15 +1,28 @@
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>,
+     IdentityRoleClaim<int>, IdentityUserToken<int>>  ///instead  of the Dbcontext we r going to use identity Dbcontext // we dont hav this included //IdentityDbContext// included with our project we need to go and install 
+    //bcoz it's an entity framework package then we're going to need to actually add this to it get access 
+    // bcoz we want to access we want ot acces to user roles & we've given our entities a diffent key we r going to using it's instead of strings then go ahead & provide type parameters for this as well 
+// if we weren;t interrested in dealing with roles & getting a list of roles this would be all we need to do However bcoz we want to get a list of the user roles then we need to go a bit further 7 we need to identify every single type unfortunately that we need to add to identity
+//We cant just specify our other class which isour app user roles If we specify that then we have to specify many others 
+// just add the types that we need  in here // If we specify this 1 // AppUserRole,// then we need to identity all of te different types But it does give us an opportunity to ensure they r usng integers just like we r using for the other IDs inside here 
+// go down & configure ur relationship between our app user to our app role & the many to many table to join a table that we crated as well 
+//add some configuration in here for that 
+
     {
         public DataContext( DbContextOptions options) : base(options)
         {
 
         }
-        public DbSet<AppUser> User { get; set; }
+        // public DbSet<AppUser> Users { get; set; }//we r attempting to override it the identity of context provides us with the table we need
+//to populate our database with identity so we dont need to provide this Dbset just remove this 
+
         // public object Users { get; internal set; }
 
         //we didn't add except for the photos bcoz we didn't really need to do anything with them need to do smthing with our likess 
@@ -21,6 +34,21 @@ namespace API.Data
         {
             base.OnModelCreating(builder);// bcoz we r overriding this method just pass into the class we r driving from & we get access to that using base 
         //if we do this we can smtimes get errors when we try & add immigration 
+
+        builder.Entity<AppUser>()//canges after indentity  add some configuration in here for that 
+           .HasMany(ur => ur.UserRole)
+           .WithOne(u => u.User)
+           .HasForeignKey(ur => ur.UserId)
+           .IsRequired();// we just need to configure other side of this relationship as well
+
+            builder.Entity<AppRole>()//canges after indentity  add some configuration in here for that 
+           .HasMany(ur => ur.UserRole)
+           .WithOne(u => u.Role)
+           .HasForeignKey(ur => ur.RoleId)
+           .IsRequired();
+           //this is what we need in place forour data context now we inherit from identity context & give it all of those types we remove the Db set for user bcoz that's peovided by identity context 
+           //& then we can configure the realtionship between the appUser & our user roles as well as the realtionship between the AppRole & our userRoles 
+
 
         //we'll work on our user like entity here & we'll say builder & then we say entity <type parameter> what we wan to configure 
             builder.Entity<UserLike>()

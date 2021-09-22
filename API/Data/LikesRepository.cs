@@ -40,7 +40,7 @@ namespace API.Data
         public async Task<PagedList<LikeDto>> GetUserLikes(LikesParams likesParams)
         // what we r returning is PageList// what we r going to return from this now is page list we also create the instance of that class at the same time 
         {
-            var users = _context.User.OrderBy(u => u.UserName).AsQueryable();//we r gonna add 2 querable to help us out here 
+            var users = _context.Users.OrderBy(u => u.UserName).AsQueryable();//we r gonna add 2 querable to help us out here 
             //User.OrderBy(u => u.UserName // we add OrderBy & will say u guys to u .username //specify as AsQueryable// going to building up our 
             //queries inside here & but we r also gonna do add var 
             var likes = _context.Likes.AsQueryable();// we r making 2 queries here but we r not really we r going to be joing these inside query &
@@ -102,7 +102,7 @@ namespace API.Data
 
         public async Task<AppUser> GetUserWithLikes(int userId)
         {
-            return await _context.User// where we just get the list of users that this user has liked & that's what we r going to return from
+            return await _context.Users// where we just get the list of users that this user has liked & that's what we r going to return from
             //this & 
             .Include(x => x.LikedUsers)
             .FirstOrDefaultAsync(x => x.Id == userId);// getting a user with their collection of links & what we r going to doing when they add alike is er r going

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
@@ -9,9 +10,11 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
+
 import { AuthGuard } from './_guards/auth.guard';
 import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 import { MemberDetailedResolver } from './_resolvers/member-detailed.resolver';
+import { AdminGuard } from './_guards/admin.guard';
 
 const routes: Routes = [
   { //when user browsers to localhost for 200 directly then this component will open // HomeComponent// will be loaded
@@ -32,6 +35,7 @@ const routes: Routes = [
     //when we browser to members one or members two, then we r going ro load up the member details components 
     { path: 'lists', component: ListsComponent},
     { path: 'messages', component: MessagesComponent},
+    { path: 'admin', component: AdminPanelComponent, canActivate: [AdminGuard]},// role management//thes accumulates if we fail to meet any of these guard then we fail at the 1st hurdle here which is our old guard & then as long as we padd that we can access all of the others But if we hit the admin guard & we r not an admin or a moderator then we r gonna fail 
 
    ]
   },

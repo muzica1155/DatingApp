@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { Token } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import {map} from 'rxjs/operators';// this works just like map function in javascript
@@ -79,11 +80,40 @@ export class AccountService {
 
    setCurrentUser(user: User)// add helper method her called set current user
     {// shifted the local storage method to setCurrentUser from if (user)//
+      
+      //changes after role management
+      user.roles = []; //where we r setting the current user there we give our user dot rolls 7 empty ..empty array to work& start with
+      const roles = this.getDecodedToken(user.token).role;// we specified role//token).role;//bcoz that's what the roles even if there's morethan 1 it still just role as the name of the property inside 
+      //But this does give is smthing to think about bcoz if we take a look & let's take lisa token 
+
+      //when we populate the roles inside the user role we always wanted to be an array even if we just get this as a simple string "role": "Member"
+      //now we have to check to see if the roles that we have here is an array or just an simple string //user.roles ///
+      Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);//used we can use the ternary & if it is an array already then what we r gonna do is just say
+      //if it is not //roles : user.roles;//then we r gonna do say user dot ...then pass in the roles bcoz we know that'sjust a simple string
+      // we already got an array //= [];//created for our user roles & then we populate it even with array of roles or we push the only that they r into an array 
       localStorage.setItem('user', JSON.stringify(user));// lets tidy this up instead of using or havinf local storage in multiple places where we set the item
+      //& then we gonna set our item as per normal inside here & now that wehave the role available in here now we can use the info inside to new guard 
+      //that we can create 
       this.currentUserSource.next(user);
     }
    logout() {//we want to do is be able to persist our in here so in our roots app component
      localStorage.removeItem('user');
      this.currentUserSource.next(null);
    }
+
+   //changes after role management
+//what we need to take a look inside our token from our account service Now we haven't needed to do this up to now bcoz we've been returning our user info as an object & our token is just the token
+//but what we gonna need as a method inside here to go & GET THE decorded token & we'll just go add a method t
+
+    getDecodedToken(token)// getting the decoder token doesn't mean that we r gonna we r doing anything hackie here toke is always available in effectively a clear text we already seen that JWT IO so we r not hackig into the token & getting anything'
+    //like the signature we r not decoding that just the info inside the token is all we r doing here 
+    //we can do to get the info inside the token is we can say t
+    {
+    return JSON.parse(atob(token.split('.')[1]));//atob//this is just gonna to allow us to decode the info inside what the token is returned As the token is not encrypted the signature is the only part is encrypted we use atob to do this
+    //(atob())// then we pass the data to this method which is a string Our token is a string then split the token then specify the period (',')
+   // bcoz the token comes in 3 parts we have our header we have our payload & then the signature the part that we r interested in is the middle part 
+   //which is the payload So we can specify 1 as the array elements that we want to access wen we split this particular token 
+   //that gives us the access to the payload inside the token // nest update our user type//after that back to accountservice
+   
+  }
   }

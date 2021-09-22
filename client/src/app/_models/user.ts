@@ -8,6 +8,7 @@ export interface User // interface in typescript are a little bit different to i
     photoUrl: string;//property 
     knownAs: string;//we haven't used this property anywhere add in navbar
     gender: string;
+    roles: string[];
 
 }
 

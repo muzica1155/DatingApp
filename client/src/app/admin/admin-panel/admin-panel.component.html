@@ -1,0 +1,16 @@
+<h2>Admin Panel</h2>
+<div class="tab-panel">
+    <tabset class="member-tabset">
+        <!--we r going to use structural directive once again for *apphasrole bcoz for user management only the admin user is going to be able to do this -->
+        <tab heading='User management' *appHasRole='["Admin"]'>
+            <div class="container">
+                <app-user-management></app-user-management>
+            </div>
+        </tab>
+        <tab heading='Photo management' *appHasRole='["Admin", "Moderator"]'>
+            <div class="container">
+                <app-photo-management></app-photo-management>
+            </div>
+        </tab>
+    </tabset>
+</div>

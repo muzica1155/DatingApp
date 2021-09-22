@@ -25,7 +25,7 @@ namespace API.Data
 
         public async Task<MemberDto> GetMemberAsync(string username)//talk about projection what if we dont wan to use automapper
         {
-            return await _context.User
+            return await _context.Users
             .Where(x => x.UserName == username)// use consitions we want to get the user by username 
             // .Select(user => new MemberDto //then we have to do this manually mapping all the properties 
             // //in this select statement we start manually mapping the properties need to select from our database put inside & return for our memberDTO
@@ -48,7 +48,7 @@ namespace API.Data
             // .Skip(4)//skip 1st five for instance we r not going to do it inside each individual method like this bcoz this would be inefficient 
             //& would have to do the same for each different repository that we had & everytime we wanted to return a list we want smthing a bir more reusable than doing it directly
             //inside this method we do start of in our helpers folder 
-            var query =  _context.User.AsQueryable();// pagination// if we look at the type that the query is at this stage before we r done anything else then our
+            var query =  _context.Users.AsQueryable();// pagination// if we look at the type that the query is at this stage before we r done anything else then our
             //query is a type of query & this is an expression tree that's going to go to our database or entity framework is going to build up this query
             //as an expression tree & then when we execute the 2 list i think that's when it goes & executes the request in our database 
            
@@ -111,12 +111,12 @@ namespace API.Data
 
         public async Task<AppUser> GetUserByIdAsync(int id)
         {
-            return await _context.User.FindAsync(id);
+            return await _context.Users.FindAsync(id);
         }
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)// thi particular method 
         {//in order ro return work with we need to get our user from our database & we need to include the photo collection And then we pass it back to our users control & if we take a look at our users control well,
-            return await _context.User
+            return await _context.Users
             .Include(p => p.Photos)// going to give us circular reference prob bcoz in netities in appdata //method include photo witn this request as well then //action filters 
             .SingleOrDefaultAsync(x => x.UserName == username);//getting the user by username at the moment we have access to use in a token user's username now a better method to use to do this 
        // another method would actually be the one above the one that says get user by ID async bcoz in this one we r using //getUserByIdAsync// the find async mehtod & this 1 finds an entity with the given primary key values //FindAsync(id);//
@@ -124,7 +124,7 @@ namespace API.Data
         }
         public async Task<IEnumerable<AppUser>> GetUsersAsync()
         {
-            return await _context.User
+            return await _context.Users
             .Include(p => p.Photos)
             .ToListAsync();///method to get and go all of our users 
         }

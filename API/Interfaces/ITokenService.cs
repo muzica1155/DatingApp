@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using API.Entities;
 
 namespace API.Interfaces
@@ -9,6 +10,7 @@ namespace API.Interfaces
     //
     public interface ITokenService ///whenit come to interface we always prefix them with them in I
     {
-        string CreateToken(AppUser user);
+        // string CreateToken(AppUser user);// changes afte identity
+        Task<string> CreateToken(AppUser user);
     }
 }

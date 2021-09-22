@@ -1,0 +1,18 @@
+<p>user-management works!</p>
+<div class="row">
+    <table class="table">
+        <tr>
+            <th style= "width: 30%;">Username</th>
+            <th style= "width: 40%;">Active Roles</th>
+            <th style= "width: 30%;"></th>
+            
+        </tr>
+        <tr *ngFor="let user of users">
+            <td style= "padding-bottom: 50px;">{{user.username}}</td>
+            <td>{{user.roles}}</td>
+            <td><button (click)="openRolesModel(user)" class="btn btn-info">Edit Roles</button></td>
+            <!--we wont anything else in therr bcoz the model is gonna get is configuration properties from our user management component-->
+
+        </tr>
+    </table>
+</div>

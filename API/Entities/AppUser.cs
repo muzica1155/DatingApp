@@ -1,21 +1,31 @@
 using System;
 using System.Collections.Generic;
-using API.Extensions;
+// using API.Extensions; //do not need API extension after identity 
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities
 {
-    public class AppUser
+    public class AppUser : IdentityUser<int>//from our appUser we r gonna derive from an identity class & 1 that we going to drive from is called identity class
+    //ASP.nET package comes with the Identity & by default if we hover over WE gonna give this a key of an event so that we dont need to do too much refactoring in our code
+    // the way we do that to specify the type of it inside the type parameter //what we do when we use identity we get certain number of fields crated for us
+    //take a look at the warnings here see that ID is trying to overide the implementation we get from the parent class So we dont need to specify ID or say the user name property
+//if u did call username smthing of a user with a capital N & then name then u'll have a bit more refactoring to do. this is the reason I chose to use this earlier to keep //UserName // 
+//this is the reason I choose to use this earlier to keep the refactoring at this stage down to an absolute minimum
+// we dont need anymore is any of these
     {
-        public int Id { get; set; }
-        public string UserName { get; set; }//DTO Data transfer Object
-        //when we return appuser properties to a appuer to a client user 
-        //another reason to use DTO hindinf certain porperties that maps directly to our database 
-        // we can flaten object or we got nested object inside our code and also we lokk relationship we could have circular references between an entity to another cause circuler reference excuptions 
-        //main use of dto to our acount controller so we can receive the properties inside the object 
+    // we dont need any of these top 4 fields anymore bcoz password Hash & passowrd salt all be ta identity doesn't use a password source column But this is createed for us keep the rest of them '
+    //
 
-        public byte[] PasswordHash { get; set; } //byte[] arays 
+        // public int Id { get; set; }
+        // public string UserName { get; set; }//DTO Data transfer Object
+        // //when we return appuser properties to a appuer to a client user 
+        // //another reason to use DTO hindinf certain porperties that maps directly to our database 
+        // // we can flaten object or we got nested object inside our code and also we lokk relationship we could have circular references between an entity to another cause circuler reference excuptions 
+        // //main use of dto to our acount controller so we can receive the properties inside the object 
 
-        public byte[] PasswordSalt { get; set; }
+        // public byte[] PasswordHash { get; set; } //byte[] arays 
+
+        // public byte[] PasswordSalt { get; set; }
         
         public DateTime DateOfBirth { get; set; }
 
@@ -57,6 +67,7 @@ namespace API.Entities
 
         public ICollection<Message> MessagesSent { get; set; }//add additional 2 collections & we'll say I collections
         public ICollection<Message> MessagesReceived { get; set; }// now we r going to need to go to our data context & configure 
+        public ICollection<AppUserRole> UserRole { get; set; }// & have the same relationship so i hope his roleis actig as our joint table & what we also need to do is AppUserRole
 
         
 

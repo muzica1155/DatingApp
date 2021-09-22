@@ -37,6 +37,10 @@ namespace API.Controllers
             //     _context = context;
         }
 
+        //cahnges identity
+        //check to make sure that our roles work //just add authorized attribute & just temporary we gonna say in paramaters
+        // [Authorize(Roles = "Admin")]//Admin means Only can access the ful list od users This is temporary jus tot make sure our roles r working or not 
+
         [HttpGet]   // add end points here to get all the user and the specific user 
                     //ensure that our endpoint are protected wit authentication is at an authorized attr
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)// we r not taking anything in a request at the moment 
@@ -86,6 +90,11 @@ namespace API.Controllers
         // //api/users/3
         // [Authorize]
         // [AllowAnonymous]
+
+//Changes after identity 
+//for individual Http get
+        // [Authorize(Roles = "Member")]// so memebers can get an individual user whereas only theadmin can get a full list of users
+
         [HttpGet("{username}", Name = "GetUser")]//then //Name = "GetUser")]//then we can use this routes name as one of the parameters in the created up rates so we can specify 
         // [HttpGet ("{id}")]   //specify root parameters if somebody its this end points 
 

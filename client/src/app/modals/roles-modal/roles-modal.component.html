@@ -1,0 +1,41 @@
+<p>roles-modal works!</p>
+<div class="modal-header">
+    <!--normal modal using bootstrp classes what we can do we can pass properies in to this {{title}} -->
+    <!-- <h4 class="modal-title pull-left">{{title}}</h4> -->
+    <h4 class="modal-title pull-left">Edit Roles for {{user.username}}</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <ul *ngIf="list.length"> -->
+      <!-- <li *ngFor="let item of list">{{item}}</li> -->
+    <!-- </ul> -->
+    <!--create a normal tmeplete form -->
+    <form #rolesForm="ngForm" id="rolesForm">
+        <!--inside this div we loop over our roles-->
+        <div class="form-check" *ngFor="let role of roles">
+            <!--before the closing blacket we want to give them classes & what we want to do is it's checked etc -->
+            <input type="checkbox"
+                   class="form-check-input"
+                   [checked]="role.checked"
+                   value="role.name"
+                   (change)="role.checked = !role.checked"
+                   [disabled]="role.name === 'Admin' && user.username === 'admin'"
+            >
+            <!--the roles that we r gonna pass this r gonna be objects & we r gonna to have a checked property inside the role Effectively true or false is it checked or is it not checked then ?-->
+            <!--(change)="" we gonna set this to the opposite of whether it's checked -->
+            <!--// make this disabled this particular input so that it's gonna be a list of checks or a list of checkboxes with each of the differnt roles with a check box next to it-->
+            <!--'Admin' && user.username === 'admin'"// we dont want to admin to prevent thme form being the admin basically otherwise -->
+            <!--our application would never be able up update to never roll again especially if the admin is the only -->
+            <!--So we prevent that behavior & terminate -->
+            <label>{{role.name}}</label>
+        </div>
+    </form>
+    <!--our buttons r gonna to be inside the photo here we do give Id -->
+  </div>
+  <div class="modal-footer">
+    <!-- <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">{{closeBtnName}}</button> -->
+    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
+    <button type="button" class="btn btn-success" (click)="updateRoles()">Submit</button>
+  </div>
