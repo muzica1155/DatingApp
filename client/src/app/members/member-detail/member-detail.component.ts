@@ -1,11 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute} from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router} from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
+import { take } from 'rxjs/operators';
 import { Member } from 'src/app/_models/member';
 import { Message } from 'src/app/_models/message';
+import { User } from 'src/app/_models/user';
+import { AccountService } from 'src/app/_services/account.service';
 import { MembersService } from 'src/app/_services/members.service';
 import { MessageService } from 'src/app/_services/message.service';
+import { PresenceService } from 'src/app/_services/presence.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -13,7 +17,7 @@ import { MessageService } from 'src/app/_services/message.service';
   styles: [
   ]
 })
-export class MemberDetailComponent implements OnInit {
+export class MemberDetailComponent implements OnInit, OnDestroy {
 @ViewChild('memberTabs', {static: true}) memberTabs: TabsetComponent;// use the selector & call it membertab we can call anything specifically we r gonna get a tabset component here
 //this is peovided by ngx bootstrap we gonna give it a type of tabset component  // we also gonna add anothere property
 member: Member;
@@ -27,14 +31,24 @@ activeTab: TabDirective;//so each 1 of our temps inside here we 've got a tp dir
 messages: Message[] = [];// creata a property for messages thses r gonna be a type of message array & what we'll do is we'll initialize disarray to 
 //an empty array & i cant remember if we did this on the other 1 but we need to if we haven't lets check  
 // if we dont initialize the array then for sure we r gonna get an error if we try & access a length of the property on smthing 
+   
+user: User;//add property for the user
 
-  constructor(private memberService: MembersService, private route: ActivatedRoute, 
-    private messageService: MessageService) //activated root we want to access when a user & we get access to the query parameters that we r passing that 
+  // constructor(private memberService: MembersService, private route: ActivatedRoute, 
+    constructor(public presence: PresenceService, private route: ActivatedRoute, 
+    private messageService: MessageService, private accountService: AccountService, 
+    private router: Router) //activated root we want to access when a user & we get access to the query parameters that we r passing that 
   //clicks on any of these routes then we r going to send up or they r going to use their username 
   //or we use theusername to decide which user this is & we neeed toacces that particular user profile
   // to get that activated routes
-  
-  { }
+  {
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
+    //& this gives us the access to our current user so we can make user of that down here
+
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false; ///this is a fix when user see another uaer 2 profile click the notification of user 1 userMessage it takes u to user 1 messages tab with no messages lolz
+  // = () => false;//pass this with a function then set it false  Means is if we go back & repeat the same test
+  }
+ 
 //in ngOnInit, // we went out to our Api & we got our member back going on angular already loaded our temple & this doesn't hapen until after the template has already been created by angular 
 //when angular created this template angular didn't know that our user was about to exist 
 //to avoid error in our console is add a conditionals to see if we have the member before we try display the member '
@@ -102,6 +116,10 @@ loadMessages()
 
 selectTab(tabId: number) 
 {
+  //this update was made for bug worked 
+  this.router.navigate([], {
+    relativeTo: this.route,
+  queryParams : {tab: tabId}});//this update was made for bug worked when u r in interest or photo tab
  this.memberTabs.tabs[tabId].active = true;
 
 }
@@ -121,10 +139,42 @@ onTabActivated(data: TabDirective) // & going to receive the data 7 te data is a
   //they stop messages = 0 bcoz if they're switching between the tabs of a user & we already have messages loaded insie this component
   // then obviously we r not gonna dispose of them & then reload them again just use the same ones
   {
-    this.loadMessages();
+    // this.loadMessages();//currently we r loading the messages thi is our API call But we r gonna get this from our signal our hub now instead 
+     this.messageService.createHubConnection(this.user, this.member.username)//(this.user)// we gonna access user objects inside here so we'll come up to 
+     //where we r injecting things & we r injecting things & we r also gonna 
+     //bco we r geting the messages now form the message service What we dont need to do is pass down the messages from here to our child
+     // component the member messages components open member-detail.componenet templates
 
-  }
+     
+  } else // we also do disconnects from thr hub if they go away from the messages tab 
+  {
+    this.messageService.stopHubConnection();//if they change tabs we stop the hub conection
+  } // if we r not activating a tab we also need another way to stop the hub connection if they move away from the member details component
+  //completely for that we look another 1 of the angular lifecycle methods called early on destroy what to do when this component is destroyed
+  // & we implement this interface as well 
 
+}// if we r not activating a tab we also need another way to stop the hub connection if they move away from the member details component
+  //completely for that we look another 1 of the angular lifecycle methods called early on destroy what to do when this component is destroyed
+  // & we implement this interface as well 
+
+      ngOnDestroy(): void {
+                          this.messageService.stopHubConnection();
+                   }
+    // so we activated the hub when we click on the messages tab & anything else that we do we r gonna stop that hub conection 
+   // now when we stp the connection we r effectively destroyed that hub So if we try & excute this 1 & this 1 has already taken plac ethen we r gonna to get a problem
+   //in our application & it will be the normal exception where we r trying to execute smthing on smthing that doesn't exist'
+   // what we will do to avoid that situation  from happening bcoz & the reason it could happen is if smbody is on a message tab they create 
+   //the connection they go to about page we stop the hub connection they then go to another part of our app 
+   // we then try & execute this bcoz we've just destroyed our campaign & then we get the prblem then we go to message.service 
 }
 
-}
+
+
+
+
+
+
+
+
+
+

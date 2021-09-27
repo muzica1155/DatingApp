@@ -1,6 +1,6 @@
 
 import { Message } from 'src/app/_models/message';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { Member } from 'src/app/_models/member';
 import { MessageService } from 'src/app/_services/message.service';
 import { MembersService } from 'src/app/_services/members.service';
@@ -30,7 +30,8 @@ export class MemberMessagesComponent implements OnInit {
   
 
   // constructor(private messageService: MessageService)
-  constructor(private messageService: MessageService)
+  //But what we'll use is the aync pipe to subscribe to the messages so make this public we can access it form our components templete & then we'll go to the member_messages_component templete
+  constructor(public messageService: MessageService)
    { }
 
   ngOnInit(): void
@@ -44,14 +45,23 @@ export class MemberMessagesComponent implements OnInit {
   }
   sendMessage()//crate a method inside here to actually send a message So 
   {
-    this.messageService.sendMessage(this.username, this.messageContent).subscribe(message => {
-      this.messages.push(message);// push the new messages that we've created inside here so that we can see it in the aray of the messages
+    // this.messageService.sendMessage(this.username, this.messageContent).subscribe(message => {
+      this.messageService.sendMessage(this.username, this.messageContent).then(() => {
+    // we use then when we r using promises as we r now & we r getting the message back from here so we don't need the message in there this empty parenthesis
+     // simply receiving this form our signal our hub 
+
+      // this.messages.push(message);// push the new messages that we've created inside here so that we can see it in the aray of the messages
+      //
       //& then what we need to do is go to our member message component template
+      // we r not gonna push the message anymore either 
       this.messageForm.reset(); //after we send a mesage we r gonna say// we just clear the content inside the form 
 
     })// we need access to the username which we also removed from  this as well 
     // we have our username now we also want is this message content which will add to our properties & will say 
     //after subsrcibe we need to get the message back fro this
+  }
+  @HostListener('window:beforeunload', ['$event']) handleRefresh(){ //changes from comment 
+    this.messageService.stopHubConnection();
   }
   
   

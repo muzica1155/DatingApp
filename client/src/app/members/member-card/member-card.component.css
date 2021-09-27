@@ -40,6 +40,20 @@
     transition: all 0.3s ease-in-out;
     
 }
+ 
+/* bcoz font awesome doesn't come with blinking functionality it comes with spinners But that looks weird y r spinning ur user icon around over 7 over again */
+/*what we want to do this is blink*/
+@keyframes fa-blink {
+    /*inside here will specify 0 percent */
+    0% {opacity: 1;}
+    100% {opacity: 0.4;}
+
+}
+
+.is-online {
+    animation: fa-blink 1.5s linear infinite;
+    color: rgb(44, 138, 44);
+}
 
 .btn {
     font-size: 0.7em;

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using API.DTOs;
 using API.Entities;
@@ -37,6 +38,13 @@ namespace API.Helpers
                  src.Recipient.Photos.FirstOrDefault(x => x.IsMain).Url));
                  // this i will save us typing out all of that mapping code & what we'l also do is we're going to create a DTO for the receiving
                  //of a message as well While we r here lets setup out that we can then forcus on creatng that 
+
+                CreateMap<DateTime, DateTime>().ConvertUsing(d => DateTime.SpecifyKind(d, DateTimeKind.Utc)); //create a mapping for time zone UTC now 
+                //use a function in order to map a called convert using 
+               // DateTime.SpecifyKind)// this gives us the opportunity to tell our datetime if it's UTC or if it's local time 
+               //(d, DateTimeKind.Utc)); // what this means is tha twhen we return our dates to the client we r gonna to have that Z on the ned of it so 
+               // let's go take a look & if I refresh this page 
+
         }
     }
 }

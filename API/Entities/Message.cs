@@ -22,7 +22,8 @@ namespace API.Entities
 
          public DateTime? DateRead { get; set; }/// we r gonna make this optional bcoz we want this to be null if the message has not been read 
          //& what we'l also do is have a date time 
-         public DateTime MessageSent { get; set; } = DateTime.Now; ///thi si going to be date time that message is sent 
+         public DateTime MessageSent { get; set; } = DateTime.UtcNow;
+        //  public DateTime MessageSent { get; set; } = DateTime.Now; ///thi si going to be date time that message is sent 
          // as soon as we create a new instance of this then we set the time to the current server timestamp 
            
          public bool SenderDeleted { get; set; }//then we have a couple of additional properties and we'll have a boolean

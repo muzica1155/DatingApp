@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 
 import { User } from './_models/user';
 import { AccountService } from './_services/account.service';
+import { PresenceService } from './_services/presence.service';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +15,8 @@ export class AppComponent implements OnInit {// angular come with life cycle eve
   title = 'The Dating App';//we can pass data from our component to our view templete itself we do this wit interperlation 
   users: any;// typescript give us type safty unless we use this particular users properties: any ;
   // constructor(private http: HttpClient, private accountService: AccountService)// use app component to fetch the data and lend display on the page using dependence injection 
-  constructor(private accountService: AccountService)//bring in our account service into our app components 
-  
-  { 
-
-
-   }
+  constructor(private accountService: AccountService, private presence: PresenceService)//bring in our account service into our app components 
+  { }
   ngOnInit() {
     // this.getUsers();
     this.setCurrentUser();
@@ -29,8 +26,15 @@ export class AppComponent implements OnInit {// angular come with life cycle eve
   setCurrentUser()//we create a new method & we call it current user user inside here inside the app componentuse the same name
       {
         const user: User = JSON.parse(localStorage.getItem('user'));  //add a varaible bring on use object add this to our import use JSON.parse() to get the object out of this stratified form into our user object here
-        
-        this.accountService.setCurrentUser(user);//
+        // during SignalR 
+        if (user)//we really should check that we actually have a user before we do anything with this 
+        { 
+          this.accountService.setCurrentUser(user);//here to set the current user 
+          this.presence.createHubConnection(user);// what we do we know we got a user then we say
+          //(user);// pass the user so that when we create it we could get access to the users JWT token then we need to go across our account sevice 
+        }
+
+        // this.accountService.setCurrentUser(user);//
       }
   //   getUsers() //separate method
   // {

@@ -5,6 +5,7 @@ import { ReplaySubject } from 'rxjs';
 import {map} from 'rxjs/operators';// this works just like map function in javascript
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
+import { PresenceService } from './presence.service';
 
 ///Angular services is a singleton when we inject int into a component & its initialized it will stay initialized until our app is disposed of the user closes the browser. for instance or they move away from our applicaition at that point our services is destroyed
 //but if they on our applications then this account service will stay initiated through the lifetime that the app is around 
@@ -32,7 +33,7 @@ export class AccountService {
         // constructor(private http: HttpClient) { }//inject the http client into our account service 
   currentUser$ = this.currentUserSource.asObservable(); //this is currentUser$  going to be observable we give the dollar sign  at the end & then we say that the current user dollatr is equal to this 
   // currentUser$//we r going to have access to that property inside here & this is going to aloow us to set the user's image in navBAr
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private presence: PresenceService) {}
    login(model: any)//method created logiis going to receive our credentials from the login form from our appbar 
    {
      // model contain our username & password that we send up to the server
@@ -50,7 +51,11 @@ export class AccountService {
       //     localStorage.setItem('user', JSON.stringify(user)); //this item a key of user, & then we r going to take the object we get back & stringify it 
       //   //now when we subscribe or when we log in because we r subscribing in our nav component then this function is going to run & it's going to populate our user inside local storage in the browser
       //  this.currentUserSource.next(user); //we r going to set our current user or the obsevable to replace subject & set this to the current user  we get back from our API
-      }
+      
+      //change During Signal
+        this.presence.createHubConnection(user);//when we log in we r gonna set this & create the connection who will say this to 
+        //also do the smae to the register method
+       }
        })
        //what we wanna do with response 
        //we want to get the user from the response 
@@ -70,7 +75,12 @@ export class AccountService {
           // this.currentUserSource.next(user);// problem we haven't given our user object to type & we have given it type to our current user source // not able ot set as object 
         // this.currentUserSource.next(user);//instead of using that method her we can kjust say this set current user & we can pass in the user 
         // we can do same for the login 
-        }
+        
+        //changes during signal
+        this.presence.createHubConnection(user);//when we log in we r gonna set this & create the connection who will say this to 
+        //also do the smae to the register method also same to logout but differnet
+      
+                   }
         // return user;//we dont need the user just as an example gonna return the user to be clear what we r doing from our functon
         // just to be clear what we saw toreturn user from this 
       })
@@ -99,6 +109,10 @@ export class AccountService {
    logout() {//we want to do is be able to persist our in here so in our roots app component
      localStorage.removeItem('user');
      this.currentUserSource.next(null);
+     this.presence.stopHubConnection();//change during signal
+     //any f a pont when our user closes the browser moves to another website or anything else then signal r automatically disconnects
+     //like client So the only time that we need to control this ourselves is when a user logs out & they go back to the home page 
+     //we r gonna to make sure that we stop the hub connection in that case 
    }
 
    //changes after role management

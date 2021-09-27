@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Member } from 'src/app/_models/member';
 import { MembersService } from 'src/app/_services/members.service';
+import { PresenceService } from 'src/app/_services/presence.service';
 
 @Component({
   selector: 'app-member-card',
@@ -15,7 +16,8 @@ export class MemberCardComponent implements OnInit {
   //this data from its parents (memberlist component)
 
   //we add functionality in say that a user can like another user using members.service.ts
-  constructor(private memberService: MembersService, private toastr: ToastrService) 
+  constructor(private memberService: MembersService, private toastr: ToastrService, public presence: PresenceService) 
+  //public presence: PresenceService// Y public bcoz we gonna access the observables of the online users using an async pipe 
   { }
 
   ngOnInit(): void {

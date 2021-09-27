@@ -25,6 +25,13 @@ namespace API.Data
             _mapper = mapper;
             _context = context;
         }
+        //now that we've got htis interface in order to access to differnt entities we r gonna need to upadte our data context 
+        //
+
+        public void AddGroup(Group group)
+        { /// after maing the changing in DBset DBcontext we come here to implement
+            _context.Groups.Add(group);
+        }
 
         public void AddMessage(Message message)
         {
@@ -38,6 +45,20 @@ namespace API.Data
             _context.Messages.Remove(message);// for deletemessage a
         }
 
+        public async Task<Connection> GetConnection(string connectionId)
+        {
+            return await _context.Connections.FindAsync(connectionId);
+        }
+
+        // public Task<Group> GetGroupForConnection(string connectionId)
+        public async Task<Group> GetGroupForConnection(string connectionId)
+        {
+            return await _context.Groups// so we need to return a group from this 
+            .Include(c => c.Connections)//include the connection//(c => Connections)//bcoz thi is all related entity
+            .Where(c => c.Connections.Any(x => x.ConnectionId == connectionId)) //add a statement to
+            .FirstOrDefaultAsync(); //which is gonna return ad a group
+        }
+
         public async Task<Message> GetMessage(int id)
         {
             return await _context.Messages
@@ -48,6 +69,14 @@ namespace API.Data
             // .FindAsync(id);// al we r doing is gonna get the message now if we want to get access to the related entities 
             // then we even need to project or we need to equally load the related entities & we r not gonna to project inside here we need to 
             //change the type of thismethod bcoz we cant use include with a findAsync
+        }
+
+        public async Task<Group> GetMessageGroup(string groupName)
+        {
+            return await _context.Groups
+            .Include(x => x.Connections)//(x => x.Connections) so that we also get the groups connections as well & then 
+            .FirstOrDefaultAsync(x => x.Name == groupName);//x.Name == )// for the group name 
+            //simple queries to go & get our information 
         }
 
         public async Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams)
@@ -135,7 +164,11 @@ namespace API.Data
            {
                foreach (var message in unreadMessages)
                {
-                   message.DateRead = DateTime.Now;
+                //    message.DateRead = DateTime.Now;
+                message.DateRead = DateTime.UtcNow;//now this doesn't change anything our server still gonna send back the dates in the same format as they were before
+                //the only thing is that they r gonna to be using UTC TIME , but we still need our client to know about this We still need our dates to have the Z on
+                //the end of the dates so that our client can work out the correct local time for this we use AutoMapper
+
                }//loop over this & for any unread message that meets these conditions we r gonna mark as read
 
                await _context.SaveChangesAsync();//take opportunity to save these changes to our database 
@@ -146,6 +179,11 @@ namespace API.Data
        //received will mark them as read & then we return the messagesDto then we messageController to implement this 
        
         } //we get our messages or the messages conversation between 2 users &
+
+        public void RemoveConnection(Connection connection)
+        {
+            _context.Connections.Remove(connection);
+        }
 
         public async Task<bool> SaveAllAsync()
         {

@@ -30,6 +30,12 @@ namespace API.Data
         // the way we do that we need to override a method inside the DB context & WE achieve this we will say protected 
 
         public DbSet<Message> Messages { get; set; }//add a DBset for the messages 
+
+//change tracking the message
+       // add 2 more DBset 
+       public DbSet<Group> Groups { get; set; }
+       public DbSet<Connection> Connections { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)// we say void bcoz we dont return anthing from this & then we call it 
         {
             base.OnModelCreating(builder);// bcoz we r overriding this method just pass into the class we r driving from & we get access to that using base 

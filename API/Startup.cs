@@ -8,6 +8,7 @@ using API.Extensions;
 using API.Interfaces;
 using API.Middleware;
 using API.Services;
+using API.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -60,6 +61,8 @@ namespace API
             services.AddControllers();
             services.AddCors();
             services.AddIdentityServices(_config);/// wht extension method is use to save us from typing repeatative code
+                 //changes after SignalR
+            services.AddSignalR(); // all so need to do tell our rooting about our API or our Hub endpoints
             //
             // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)//added authentication scheme in parameters
             // //chain on some configuration 
@@ -91,12 +94,15 @@ namespace API
             //     app.UseSwagger();
             //     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             // }
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+            app.UseCors(x => x.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials() // in Startup class we need to supply lists when we r using signalr due to the way that we now send up our access token 
+            //or our token 
+            .WithOrigins("https://localhost:4200"));
 
             app.UseAuthentication();
 
@@ -105,6 +111,13 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<PresenceHub>("hubs/presence");//("")//give this a root what route is tis president hub gona to be accessed from ?
+                // we can have more than 1 hub 
+                // this takes care of setting up our 1st hub what we also need to do is take care of authorization bcoz our hubs r also going to be authenticated
+                // we dont want to try & get a username if a user is not authenticated for instance
+                endpoints.MapHub<MessageHub>("hubs/message"); // need to add another endpoint 
+                // this takes care of when a user connects what we also want to do is take a look at sending a message via this hub & we;ll look next 
+
             });
         }
     }

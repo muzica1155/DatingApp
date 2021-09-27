@@ -20,6 +20,9 @@
          <!-- <img src="{{member.photoUrl || }}"//take alternate bcoz when a new user signs up we r not going to give them the facility to add aphoto at the same time it going to be smthing they will need to do a bit later-->
         <!--if u r good developer then we always add smthing in the alternate & we will say knownAs-->
         <div class="card-body" style="padding: 0 25px;">
+            <div class="mb-2" *ngIf="(presence.onlineUsers$ | async).includes(member.username)">
+                <i class="fa fa-user-circle text-success"></i> Online Now
+            </div>
             <!-- <div>
                 <strong>Location:</strong>
                 <p>{{member.city}}, {{member.country}}</p>
@@ -55,13 +58,13 @@
             <!--add some syling need to customize this tabset class we r talking about encupsulation this is the example of the componnet that hasn't tuned off excess encapsulation 
             they've encapsulated their own styles than give it a class & then we have to add the styles that we want in a global style aheet & then we can affect what 
         then we can affect whats inside here -->
-        <tab heading= 'About {{member.knownAs}}' (selectTab)="onTabActivated($event)">
+        <tab heading= 'About {{member.knownAs}}' (selectTab)="onTabActivated($event); selectTab(0)">
             <h4>Description</h4>
             <p>{{member.introdution}}</p>
             <h4>Looking For </h4>
             <p>{{member.lookingFor}}</p>
         </tab>
-        <tab heading= 'Interests' (selectTab)="onTabActivated($event)">
+        <tab heading= 'Interests' (selectTab)="onTabActivated($event); selectTab(1)">
             <h4>Interests</h4>
             <p>{{member.interests}}</p>
            
@@ -72,7 +75,9 @@
         </tab>
         <tab heading= 'Messages' (selectTab)="onTabActivated($event)">
            <!-- <app-member-messages [username]="member.username"></app-member-messages> -->
-           <app-member-messages [messages]="messages" [username]="member.username"></app-member-messages>
+           <!-- <app-member-messages [messages]="messages" [username]="member.username"></app-member-messages> -->
+           <!--now we can access the messsages directly from our message service inside this component head over member-message.componenet.ts-->
+           <app-member-messages [username]="member.username"></app-member-messages>
            <!--just ot provide username property here & set this to member username -->
            <!--add hte -->
         </tab>

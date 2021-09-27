@@ -2,6 +2,7 @@ using API.Data;
 using API.Helpers;
 using API.Interfaces;
 using API.Services;
+using API.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,12 @@ namespace API.Extensions
     public static class ApplicationServiceExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)//In order to use this or to extend the IServiceCollections that we are going to be returning we need to use this keyword  
-        {
+        {   
+           services.AddSingleton<PresenceTracker>(); //rather than using AddScroped what we r gonna to do is say services & we r gonna to add a singlton & we r gonna in the presence tracker
+          // we locked our dictionary every point so that it could only 1 thing at a time & nobody is gonna to be able to try & access this dictionary twice whilst over users accessing it 
+          // so it does come with scalability problems bcoz of the nature of using such a thing as a shared resource // there r alternative options for this this is a way of doing it quite simpley for our particular application just to try the presence & whether or not some1 online after that head back to presenceHub.cs
+
+          
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));//when we strongly type a key or configuration in this way just start this t the top 
             services.AddScoped<ITokenService, TokenService>(); //tell our dependency injection container what is his lifetime 
             //AddSingleton //singleton is vcreated or instantiated is created and it doesnt stop unstil our applications stops it countinue using resources not really appropriate for smthing like service but we gonna make atoken 

@@ -1,0 +1,64 @@
+import { Injectable } from '@angular/core';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
+import { User } from '../_models/user';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PresenceService {
+  hubUrl = environment.hubUrl;//add a property for hubUrl & set the sequel environment 
+  private hubConnection: HubConnection;// create a private property type Hubconnection that we get form signalr 
+
+  constructor(private toastr: ToastrService) { }
+
+  createHubConnection(user: User) //create a method to create the hub connection so that when a user does connect to out application & they're authenticated 
+  //then we r gonna to automatically create a hub connection to that gonna to connect them to our presenc hub 
+  //(user: User)// pass user bcoz we r gonna to need to send up our user token for our JWT token when we make this connection 
+  //we cannot use our JWT interceptor These r no longer gonna be HTTP requests These r gonna be different & typically they'll be using 
+  //WebSocket Which has no support for an authentication header 
+  {
+    this.hubConnection = new HubConnectionBuilder()
+    .withUrl(this.hubUrl + 'presence', // then we specify // 'presence')// same name as the endpoints that we used for our hub &
+     {
+       accessTokenFactory: () => user.token }) //accessTokenFactory?//this contains a string or it returns a string containing the access token 
+       //inside here we need to give this a methods or function user.token that what we r returning 
+       
+     
+      .withAutomaticReconnect()// need to give more configuration// if there is a network problem our client is automatically gonna try
+      // & reconnect to our hub 
+      .build()//& this takes care of crating the hub connectionn
+
+      this.hubConnection //After this Start the connection to the
+      .start()//& this
+      .catch(error => console.log(error));// catch & any error & if we have an error we'll say consult the log 
+
+      //after this we listen Server events listen to those user Is online methods & user is on offline methods 
+      this.hubConnection.on('UserIsOnline', username => {
+         
+        this.toastr.info(username + ' has connected');// this is gonna to get old really fast bcoz anythime u use a connects we r gonna 
+        //display a toaste this is just a demonstration we r not gonna keep this in place but we wnat to check to make sure our hub is working so well 
+        
+      })
+      this.hubConnection.on('UserIsOffline', username => {
+          this.toastr.warning(username + ' has disconnected'); 
+          //'UserIsOnline'// be carefull wit this should be exactly should match PresenceHub this is what we acces from the client 
+          //("UserIsOnline", Context.User.GetUsername());// so we send the message when a user connets to all the other users that r 
+          //already connected * inside our presence service then when we listen to less with on method when this method is called 
+          //our client are connected then we r gnna to dislay a toast 
+          // we also need creat up connection we need a way to stop the hub connection 
+      })
+    }
+       // add the 2nd check
+       stopHubConnection() {
+      
+        this.hubConnection.stop().catch(error => console.log(error));
+        //what we need too d call this methid from somewhere So we wnat to call this when the application first starts if theuser is looged in 
+        //we alos want to stop the hub connection  if the user logs out 
+        //& also want to start the hub connection when a user logs in or when a user registers//  header over app component
+      }
+     
+      
+    
+  }

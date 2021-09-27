@@ -9,6 +9,13 @@ namespace API.Interfaces
 {
     public interface IMessageRepository
     {
+
+        void AddGroup(Group group);
+        void RemoveConnection(Connection connection);
+        Task<Connection> GetConnection(string connectionId);// task that returns the connection to
+        Task<Group> GetMessageGroup(string groupName);
+        // not complicated methods but these will allow us to manage our connections to signalR Go across to messageRepository
+        Task<Group> GetGroupForConnection(string connectionId);//add new method to optimization message
         void AddMessage(Message message);//add method to add a message to say void & message 
         void DeleteMessage(Message message);
         Task<Message> GetMessage(int id);// add a task so we can get an individual message & will say 
@@ -20,7 +27,8 @@ namespace API.Interfaces
         //using the current userID & the recipient id 
 
         // change of plan 
-        Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername);
+        Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername); 
+        //change tacking the message// we r gonna add some methods inside here to allow us to manage our groups 
 
         // instead of using the recipient ID & the user ID we change this //(int currentUserId, int recipientId);// to the string
         //bcoz we r using that for everything up to now & the consistency will we'll take the recipients username as a parameter in the controller

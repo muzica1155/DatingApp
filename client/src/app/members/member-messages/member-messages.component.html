@@ -3,15 +3,19 @@
 
 <div class="card">
     <div class="card-body">
-        <div *ngIf="messages?.length === 0">
+        <!-- <div *ngIf="messages?.length === 0"> -->
+            <!--| async pipe is used to subscribe-->
+            <div *ngIf="(messageService.messageThread$ | async)?.length === 0">
         <!--check to see if there is any messages//<div *ngIf="messages">// check the messages  we'll add te ? & say Ok lenght is equal to zero-->
         <!--if it is no messages-->
         No messages Yet... say hi by using the messages box  below
         </div>
         <!--if we do have messages we add unorder list-->
-        <ul *ngIf="messages?.length > 0" class="chat">
+        <!-- <ul *ngIf="messages?.length > 0" class="chat"> -->
+            <!-- we also use it here to chek the message length-->
+            <ul *ngIf="(messageService.messageThread$ | async)?.length > 0" class="chat">
             <!--then we can display this content so we'll add some a list item & loop over our messages-->
-            <li *ngFor="let message of messages">
+            <li *ngFor="let message of (messageService.messageThread$ | async)">
                 <div>
                     <span class="chat-img float-right">
                         <img class="rounded-circle" src="{{message.senderPhotoUrl || './assets/user.png/'}}"

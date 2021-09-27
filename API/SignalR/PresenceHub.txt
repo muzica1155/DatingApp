@@ -1,0 +1,36 @@
+using System;
+using System.Threading.Tasks;
+using API.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+
+namespace API.SignalR
+{
+    [Authorize]//add Authorize attributes no anonymous users would be able to access or conect to our particular hub here 
+    // that good we want this to be only for our authorized users 
+    //For authorize we need to do this slightly differently to how we handled it in the API controllers bcoz signalR or webSocket cannot send
+    //an authentication header but we have to use is a query string the signalr // headove to identityserviceExtension
+    public class PresenceHub : Hub //derived from hub this is a signal our class that we r deriving from
+    //So we dont need to install signal r we dont need a new get package for this is included with our project
+    //what we gonna do override these 2 methods so tha we can do smthing when a client connects to our presents hub 
+    {
+       public override async Task OnConnectedAsync()//methods
+       {
+           await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUsername());//insdie our hub we have acces to our client These r clients that r connected to this hub 
+           // we r gonna do here send the message to all of the others So this is everybody except the connection that triggered the current invoations of
+           // we r gonna to send to others & we r honna use the send async method inside hub 
+//UserIsOnline// name of the method that we use inside the client // Context.User bcoz we have access to the context we've taken & signed 
+//getUsername// that what we pass back to the other user 
+    
+       }
+        public override async Task OnDisconnectedAsync(Exception exception) //method
+        // OnDisconnectedAsync// this has a required parameter which we need to pass in for the exception will pass an exception 
+        {
+            await Clients.Others.SendAsync("UserIsOffline", Context.User.GetUsername());
+   //if we do have a exception we'll just pass that up to the base so the parent class 
+            await base.OnDisconnectedAsync(exception);// this is our 1st hub error
+            
+        }// need to do is add the signalR our service to our application now go to Startup.cs
+        
+    }
+}
