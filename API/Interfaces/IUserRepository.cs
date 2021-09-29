@@ -11,7 +11,8 @@ namespace API.Interfaces //idea of this repository system is we can only provide
     public interface IUserRepository
     {
         void Update(AppUser user);// update the tracking status in the entity framework to say smthing has canged 
-        Task<bool> SaveAllAsync();
+
+        // Task<bool> SaveAllAsync();//change of Unitofwork
         Task<IEnumerable<AppUser>> GetUsersAsync();
         Task<AppUser> GetUserByIdAsync(int id);//get user that return app user
 
@@ -22,5 +23,9 @@ namespace API.Interfaces //idea of this repository system is we can only provide
         //instead of returning & innumerable other memebers what we r going to do now return a page list our new class that we r created inside our helpre folder 
         Task<MemberDto> GetMemberAsync(string username);//create a corresponding methods thats going to return a memberDTo
         //so instead of returning appusers from this///<MemberDto>>// we going to be returning our memberDto & we will 
+          
+          //optimization query
+        Task<string> GetUserGender(string username);//add new method inside & create a method specifically just to get users gender
+         //optimization query
     }
 }

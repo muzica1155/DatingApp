@@ -122,18 +122,31 @@ namespace API.Data
        // another method would actually be the one above the one that says get user by ID async bcoz in this one we r using //getUserByIdAsync// the find async mehtod & this 1 finds an entity with the given primary key values //FindAsync(id);//
        // And bcoz our Ids automatically indexed then this 1 is going to be more efficient than the one below //GetUserByIdAsync //& also we dont include the phots in this 1 & we dont need to include thme bcoz we r not using our photos in setting the lst active property 
         }
+
+        public async Task<string> GetUserGender(string username)
+        {
+           return await _context.Users
+           .Where(x => x.UserName == username)
+           .Select(x => x.Gender).FirstOrDefaultAsync();
+           //what this give us is just that single property from the database & then we can head back to our user controller 
+        }
+
         public async Task<IEnumerable<AppUser>> GetUsersAsync()
         {
             return await _context.Users
             .Include(p => p.Photos)
             .ToListAsync();///method to get and go all of our users 
         }
+      // changes unitOf work
 
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;//returning a boolean to say that if our changes have been saved
-        }//return a boolean from this make sure that greater than zero changes have been saved into our database
-        /// if smthing changed or saved then it going to return a value greater than zero bcoz the SaveChangesAsync()// return an integer from this particilar method for a number of changes saved in database
+        // public async Task<bool> SaveAllAsync()
+        // {
+        //     return await _context.SaveChangesAsync() > 0;//returning a boolean to say that if our changes have been saved
+        // }//return a boolean from this make sure that greater than zero changes have been saved into our database
+        // /// if smthing changed or saved then it going to return a value greater than zero bcoz the SaveChangesAsync()
+        // // return an integer from this particilar method for a number of changes saved in database
+
+        //changes unitofwork
         public void Update(AppUser user)
         {
             _context.Entry(user).State = EntityState.Modified;//update our user //goona do mark this entity as it has been modified 

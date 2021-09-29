@@ -33,7 +33,10 @@ namespace API.Interfaces
         // instead of using the recipient ID & the user ID we change this //(int currentUserId, int recipientId);// to the string
         //bcoz we r using that for everything up to now & the consistency will we'll take the recipients username as a parameter in the controller
         //& obviously we 've always got access to the current username via the context of a controller //head over messagerepository 
-        Task<bool> SaveAllAsync(); //& finally lets add the task of a boolean & will implement the save all async inside here 
+        
+        //changes of units of work
+        // Task<bool> SaveAllAsync(); //& finally lets add the task of a boolean & will implement the save all async inside here 
         //now create a MessageDto before we go in at the implementation 
+        //changes o funit of work
     }
 }

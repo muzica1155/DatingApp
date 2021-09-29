@@ -24,16 +24,23 @@ namespace API.Controllers
     {
         // private readonly DataContext _context;
         // public UsersController(DataContext context)
-        private readonly IUserRepository _userRepository;
+
+        //changes unitofwork
+        // private readonly IUserRepository _userRepository;//changes unitofwork
         private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
+        
+        private readonly IUnitOfWork _unitOfWork;//changes unitofwork
+        // public UsersController(IUserRepository userRepository,//changes unitofwork
 
-        public UsersController(IUserRepository userRepository,
+        public UsersController(IUnitOfWork unitOfWork,
          IMapper mapper, IPhotoService photoService)// we nned to inject imapper interface that we get from automatic inside here 
         {
+            _unitOfWork = unitOfWork;//changes unitofwork
             _photoService = photoService;
             _mapper = mapper;
-            _userRepository = userRepository;
+            //changes unitofwork
+            // _userRepository = userRepository;//changes unitofwork
             //     _context = context;
         }
 
@@ -52,16 +59,38 @@ namespace API.Controllers
         {
 //Populate the current user name property into the userParams & set a default propertythat is just the opposite to their current gender if they dont specify anything inside here 
 //before we pass our user parameters to get members method we r going say user progrma current username is equal to user & will say get user name 
-     var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+    
+    //change unitofwork 
+    //  var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());//change unitofwork //this query here that the 1 that's causing that big long list of text in terminal
+     
+     // optimization query
+        var gender = await _unitOfWork.UserRepository.GetUserGender(User.GetUsername());
+     // optimization query
+    //   var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());//change unitofwork
+    
     //  userParams.CurrentUsername = User.GetUsername();
-    userParams.CurrentUsername = user.UserName;
+
+    //optimization query
+    userParams.CurrentUsername = User.GetUsername();// now all this is for is simply to get an gender after this take a look on user repository & create a method specifically just to get users gender
+    // userParams.CurrentUsername = user.UserName;//but all we need from this really is the users gender bcoz we dont need the user to go & get the user's username we can just get that from the token using user & get username
+    //optimization query
 
      // add a check 
      if (string.IsNullOrEmpty(userParams.Gender))
            
-           userParams.Gender = user.Gender == "male" ? "female" : "male";
+        //    userParams.Gender = user.Gender == "male" ? "female" : "male";
+
+           // optimization query
+           userParams.Gender = gender == "male" ? "female" : "male";//see the terminal with less query not getting unneccesary data from DB
+           // optimization query
+
            //we actually need to get thecurrent user in order to get access to the gender 
-            var users = await _userRepository.GetMembersAsync(userParams);// now our users now thisuses variable is now a page list of typed memeber DTO mean we got our pagination info inside here as well  
+           
+           //changes unitofwork
+           var users = await _unitOfWork.UserRepository.GetMembersAsync(userParams);
+            // var users = await _userRepository.GetMembersAsync(userParams);// now our users now thisuses variable is now a page list of typed memeber DTO mean we got our pagination info inside here as well  
+           //changes unitofwork
+
             // var users = await _userRepository.GetUsersAsync();//we are using repository & gwtting hte users from our repository 
             // var usersToReturn = _mapper.Map<IEnumerable<MemberDto>>(users);///Map<MemberDto>();// pass the source object in parameters// we dont just want ot map to our member Dto want map to mappersto also wanto to map
             //IEnumerable of our mumber dto
@@ -110,7 +139,12 @@ namespace API.Controllers
 
             ///wat we r returning is our memberDTO and also maper is teken care of all of the mapping between our app user and the member 
             // var user = await _userRepository.GetUserByUsernameAsync(username);//we got our entity in memory from this request & then we go in memory we map from one object to another & its very easy to argue that this cannot be efficient 
-            return await _userRepository.GetMemberAsync(username);
+            
+            //changes unitofwork
+            return await _unitOfWork.UserRepository.GetMemberAsync(username);
+            // return await _userRepository.GetMemberAsync(username); 
+            //unit of work
+
             //we r returning a member now directly from our repository bcoz thats what this is returning from
             //    return await _context.User.FindAsync(id); 
             // return await _userRepository.GetUserByUsernameAsync(username); //swap the id for a user name in this case 
@@ -133,10 +167,14 @@ namespace API.Controllers
          // we actually want to get it from what we r authenticating again which is the token 
             var username = User.GetUsername(); //inside the controller we have acces to a claims principle of the user now this contain info about their identity 
                                                // want to do find the claims that matches the name identifier which is the claim that we give the user in that token 
-            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername()); //once we have the username
-                                                                                         //    var user = await _userRepository.GetUserByUsernameAsync(username);
-                                                                                         //instead of storing the username in a variable we can just pass that method into our get username
-                                                                                         //FindFirst(ClaimTypes.NameIdentifier)?.Value;// now what this hould give us the user username from the token thatthe API uses to authenticate this user that the user we r going to be updating in htis case & once we have the username we can 
+           //change unitofwork
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername()); //once we have the username
+        //  var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername()); 
+        //change unitofwork
+           
+            //    var user = await _userRepository.GetUserByUsernameAsync(username);
+           //instead of storing the username in a variable we can just pass that method into our get username
+            //FindFirst(ClaimTypes.NameIdentifier)?.Value;// now what this hould give us the user username from the token thatthe API uses to authenticate this user that the user we r going to be updating in htis case & once we have the username we can 
             _mapper.Map(memberUpdateDto, user);//whe we r updating or using this to update an object then whatwe can use this particular method this map method has got 10 differnt overloads plenty of difernt options about what we can passinto this
                                                // & the oveload that we r going to use allows us to pass in this member updates DTo then we will specify what we r going to amp it ot & 
                                                //_mapper.Map(memberUpdateDto, user);//this save us manualy mapping between our updating 
@@ -144,10 +182,19 @@ namespace API.Controllers
                                                //start giving user dots example given below the
                                                //user.City = memberUpdateDto.City// we nned to go throug this and this fro all the differnt properties inside tere so we dont need to fdo that if we use automatic 
                                                // thanks to auto mapper 
-            _userRepository.Update(user);//now our object is flagged as being updated by entity fraework whatever happens 
-                                         //even if our user has not been updated by simply adding this flag we guareantee that 
-                                         // we r not going to get an exceptions or error when we come back from updating the user in our database 
-            if (await _userRepository.SaveAllAsync()) return NoContent();//return form this method if that succesfully we dont need to send any content back for a request and if this fails then what we can do is just retunr a bad request 
+            //change unitofwork
+            _unitOfWork.UserRepository.Update(user);
+            // _userRepository.Update(user);//now our object is flagged as being updated by entity fraework whatever happens 
+            //change unitofwork
+            
+            //even if our user has not been updated by simply adding this flag we guareantee that 
+            // we r not going to get an exceptions or error when we come back from updating the user in our database 
+            
+            //change unitofwork
+            if (await _unitOfWork.Complete()) return NoContent();
+            // if (await _userRepository.SaveAllAsync()) return NoContent();//return form this method if that succesfully we dont need to send any content back for a request and if this fails then what we can do is just retunr a bad request 
+            //change unitofwork
+            
             return BadRequest("Failed to Update user");
         }
 
@@ -156,7 +203,12 @@ namespace API.Controllers
                                                             //need to know that the client is going to need to know the idea of the photo & also if te photo is the main
                                                             //photo we going to need to return our newly created photo from this & we ll just cal a method & 
         {// we gonna just alloe the user to update file Not gonna take any extra info 
-            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());// wer getting our user when we do this method this includes our photos we r eagerly loading them in this method & we need to for this  
+            
+            //change unitofwork
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+            // var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());// wer getting our user when we do this method this includes our photos we r eagerly loading them in this method & we need to for this  
+            //change unitofwork
+           
             //now we have our user object on a one line here as well 
             var result = await _photoService.AddPhotoAsync(file);//then we get our result back from the photo service & then we check to see the result if we got an error we r going to return a bad request 
             // if we pass from the error
@@ -178,7 +230,12 @@ namespace API.Controllers
                photo.IsMain = true;
            }      
            user.Photos.Add(photo);// then we add the photo 
-           if (await _userRepository.SaveAllAsync())// then we return the photo & we return a badrequest if it all goes horribly 
+           
+           //change unitofwork
+           if (await _unitOfWork.Complete())
+        //    if (await _userRepository.SaveAllAsync())// then we return the photo & we return a badrequest if it all goes horribly 
+           //change unitofwork
+           
            {
             //    return _mapper.Map<PhotoDto>(photo);
            // if that false
@@ -198,7 +255,11 @@ namespace API.Controllers
         [HttpPut("set-main-photo/{photoId}")]//when we r updating smthing we want to use httpPut
         public async Task<ActionResult> SetMainPhoto(int photoId)// remember no need to pass the object back 
         {
-            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            //change unitofwork
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+            // var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            //change unitofwork
+        
         //remember when we r doing this with any of these methods when we r getting our user name from our token this means 
         //we r validating that this is the user that they say they r we can trust the info inside the token no trickery goign on bcoz our servers signed the token the users sent us the token 
         //if they saying their name is lisa the we r going to trust that correct So they r authenticating & we r going to get this user that is authenticating to this method 
@@ -215,7 +276,12 @@ namespace API.Controllers
     if (currentMain != null) currentMain.IsMain = false; //
       photo.IsMain = true; // also set the phot that we r passing in the one that we r trying to get main wil set 
     // we want to turn off the curretn main & turn on the new 1 that they have just set to that 
-    if(await _userRepository.SaveAllAsync()) return NoContent();// we dont need to send anything back in this request 
+   
+   //change unitofwork
+   if(await _unitOfWork.Complete()) return NoContent();
+    // if(await _userRepository.SaveAllAsync()) return NoContent();// we dont need to send anything back in this request 
+   //change unitofwork
+     
      return BadRequest("Failed to set Main Photo");// just in case we get this far & smthing went wrong then  we will return a bad request & we will 
     }
 
@@ -223,7 +289,11 @@ namespace API.Controllers
  //what we ll dogive this a route name & we ll specify delete dash photo is 
  public async Task<ActionResult> DeletePhotoAsync(int photoId)
  {
-     var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());//need to do again is go & get our user object 
+     //change unitofwork
+     var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+    //  var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());//need to do again is go & get our user object 
+     //change unitofwork
+     
      var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);//can do is go & get the photo// that we r interested in deleting so what well do is well save our photo equals
      if (photo == null) return NotFound();// we do a couple of check inside here
      //check this & see if the photo is null // we couldn't find the photo in the user's photo collection
@@ -241,7 +311,12 @@ namespace API.Controllers
       user.Photos.Remove(photo);//we r going to assume that was successful & whteve type of image it is but then remove it from our database
      }// will do more accurately we say use it photos . remove & will pass in the photo
    // all this does is at the track & flag & we r updaing our user at htis point remember bcoz the photo is a related entity on our user 
-    if (await _userRepository.SaveAllAsync()) return Ok();//what well do use a repository and save all async
+    
+    //change unitofwork
+    if (await _unitOfWork.Complete()) return Ok();
+    // if (await _userRepository.SaveAllAsync()) return Ok();//what well do use a repository and save all async
+    //change unitofwork
+    
     return BadRequest("Failed to delete ");//& if we dont have succes with saving this then we going to return a bad request once again 
  }
  //when we delete a resource then we dont need to send anything back to the cliet 

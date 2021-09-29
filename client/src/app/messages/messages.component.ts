@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from '../_models/message';
 import { Pagination } from '../_models/pagination';
+import { ConfirmService } from '../_services/confirm.service';
 import { MessageService } from '../_services/message.service';
 
 @Component({
@@ -20,7 +21,7 @@ pageSize = 5;
 loading = false;//we need to add a flag inside our message component to say that we r loading what we'll do we'll hide everything or behind the messages until 
 //everything ready just add a loading flag
 
-  constructor(private messageService: MessageService) 
+  constructor(private messageService: MessageService, private confirmService: ConfirmService) 
   { }
 
   ngOnInit(): void {
@@ -43,12 +44,27 @@ loading = false;//we need to add a flag inside our message component to say that
 
   deleteMessage(id: number) //Add another method for deletemessage
   { 
-    this.messageService.deleteMessage(id).subscribe(() => {
-      this.messages.splice(this.messages.findIndex(m => m.id === id), 1); //used splice method here & we'll say lets stop messages & we'll find the index of the message & 
-// paas the message ID m let expression & say = to the ID add comma specify how many messages we wamt to delete & in this case is just 1
-// more thing need to do in message component templates 
-    })// we r gonna take in the ID & they r not gonna subscribe & we dont get anything back from delete so just empty parentheses & will say
-    //
+     //optimization message
+     this.confirmService.confirm('Confirm delete message', 'This cannot be undone').subscribe
+     (result => {
+       if (result)  //result gonna be true or false
+       {
+        this.messageService.deleteMessage(id).subscribe(() => {
+          this.messages.splice(this.messages.findIndex(m => m.id === id), 1);
+        })// & this way then we r ensuring that we give them a confirmation before 
+        //they r allowed to delete their message & if we go & take a look at the browser
+
+       }
+     } )//add a confirmation before smbody is allowed to delete a message & the way that we can use thiswe'll neeed to bring in our  confirmed
+        
+
+     //changes optimization message
+//     this.messageService.deleteMessage(id).subscribe(() => {
+//       this.messages.splice(this.messages.findIndex(m => m.id === id), 1); //used splice method here & we'll say lets stop messages & we'll find the index of the message & 
+// // paas the message ID m let expression & say = to the ID add comma specify how many messages we wamt to delete & in this case is just 1
+// // more thing need to do in message component templates 
+//     })// we r gonna take in the ID & they r not gonna subscribe & we dont get anything back from delete so just empty parentheses & will say
+    ////changes optimization message
     //
   }
 

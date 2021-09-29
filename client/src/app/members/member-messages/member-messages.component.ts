@@ -1,6 +1,6 @@
 
 import { Message } from 'src/app/_models/message';
-import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { Member } from 'src/app/_models/member';
 import { MessageService } from 'src/app/_services/message.service';
 import { MembersService } from 'src/app/_services/members.service';
@@ -8,9 +8,12 @@ import { NgForm } from '@angular/forms';
 
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush, //add property to this componenet fro scrolling effect in message //change detection strategy & override it's defaults & its deafult is to check always 
+  //we gonna use on push strategy resolves the isses 
   selector: 'app-member-messages',
   templateUrl: './member-messages.component.html',
   styleUrls: ['./member-messages.component.css']
+  //add property to this componenet fro scrolling effect in message
 })
 export class MemberMessagesComponent implements OnInit {
   @ViewChild('messageForm') messageForm: NgForm; // then come down to send message

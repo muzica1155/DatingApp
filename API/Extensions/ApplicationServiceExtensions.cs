@@ -29,10 +29,18 @@ namespace API.Extensions
             //when the request is finished with the services it disposed this one is going to use all the time 
             //ADDTransient//whic is useful only Always means that services is going to be created and destroyed  as soon as method is finished and this one is normally considered not quite right for an http request this not APPROpriate  
             services.AddScoped<IPhotoService, PhotoService>();
-            services.AddScoped<IMessageRepository, MessageRepository>();///next implementation methods for this bcoz we got a big MessageDto we r going to use automapper 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();//this is gonna take care of our repositories when we inject this into a controller then it's 
+            //gonna have a instant So the data context none of our repositories well they r gonna to be using the data context that's injected into the unit of work 
+            //& thats the idea we pass that same instance the single instance to each of our repositories & also do go to each repositories
+            //changes UNitOdWork replace
+            // services.AddScoped<IMessageRepository, MessageRepository>();///next implementation methods for this bcoz we got a big MessageDto we r going to use automapper 
+            
             services.AddScoped<LogUserActivity>();
-            services.AddScoped<ILikesRepository, LikesRepository>();
-            services.AddScoped<IUserRepository, UserRepository>(); //add service for our repository services at scoped
+
+            // services.AddScoped<ILikesRepository, LikesRepository>();//changes UNitOdWork & replace 
+
+            // services.AddScoped<IUserRepository, UserRepository>(); //add service for our repository services at scoped//changes UNitOdWork replace 
+
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly); //auto mapper to find those profile the crete maps that we creted map inside this class and thats the configuration set up for automator
             services.AddDbContext<DataContext>(options =>
             {

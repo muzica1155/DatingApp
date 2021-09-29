@@ -18,27 +18,42 @@ namespace API.SignalR
 {
     public class MessageHub : Hub// drive from the hub class
     {
-        private readonly IMessageRepository _messageRepository;
+        //changes unitofwork
+        // private readonly IMessageRepository _messageRepository;
+        //changes unitofwork
+
         private readonly IMapper _mapper;
 
-        private readonly IUserRepository _userRepository;
+         //changes unitofwork
+        // private readonly IUserRepository _userRepository;
+         //changes unitofwork
 
         private readonly IHubContext<PresenceHub> _presenceHub;//we got access to our presence hub from within our messageHUb & we've
         //got a way to find out if the user is online go back to sendmessage method where we r checking to see if the user is in the same group 
 
         private readonly PresenceTracker _tracker;
 
-        public MessageHub(IMessageRepository messageRepository, IMapper mapper,
-         IUserRepository userRepository, IHubContext<PresenceHub> presenceHub,
+        private readonly IUnitOfWork _unitOfWork;//changes unitofwork
+
+         //changes unitofwork
+         public MessageHub(IUnitOfWork unitOfWork,
+        // public MessageHub(IMessageRepository messageRepository, IUserRepository userRepository,
+         //changes unitofwork
+         
+         IMapper mapper, IHubContext<PresenceHub> presenceHub,
          PresenceTracker tracker)///wee r going to need acces to 2 things at the moment accesss to our message repository
         //& also need access to the IMapper & when we send a message we r gonna have to map it into a DTO & we'll just bring in the API interface
         //for the message repository
         {
             _tracker = tracker;
             _presenceHub = presenceHub;
-            _userRepository = userRepository;
+            //changes unitofwork
+            // _userRepository = userRepository;
+            //  _messageRepository = messageRepository;
+            _unitOfWork = unitOfWork;
+            //changes unitofwork
             _mapper = mapper;
-            _messageRepository = messageRepository;
+           
         }
 
         //over here we radd user to a group when we disconnect signal without us needing to do anything is removing the user from the group 
@@ -70,9 +85,20 @@ namespace API.SignalR
             // await AddToGroup(Context, groupName);
             var group = await AddToGroup(groupName);//bcoz group is updaed at htis point 
             await Clients.Group(groupName).SendAsync("UpdatedGroup", group);//create a new method 
+            
+            //change unitofwork
+            var messages = await _unitOfWork.MessageRepository.//we r gonna get our messages  if any of the unread messages have been
+            //checked inside there to day update to date read then what we'll go is we'll say if & we'll say unit what we do
+            // var messages = await _messageRepository.
+             //change unitofwork
 
-            var messages = await _messageRepository.
             GetMessageThread(Context.User.GetUsername(), otherUser);
+           //changes unitofwork
+            if(_unitOfWork.HasChanges()) await _unitOfWork.Complete();//if any of the unread messages have been
+            //checked inside there to day update to date read then what we'll go is we'll say if & we'll say unit what we do we r still gettting our messages
+            //inside our message repository If they haven't been read by the recipient then we r gonna Mark them as read Inside there But we r
+            //coming back here to check to see if there's any changes & if there r then we r gonna save the changes back to the database 
+            //now we've got the units of work percent implemented 
 
             // await Clients.Group(groupName).SendAsync("ReceiveMessageThread", message);//when client connects then we r sending our message thread to both of our connected users even through 1 will already havr it ?but we have to correct this 
             // pass in the group name
@@ -109,10 +135,17 @@ namespace API.SignalR
             // //In signalR we dont have access to API response bcoz this is an Http response we didn't have access to that inside smthing that doesn't use 
             //             //HTTP
 
-            var sender = await _userRepository.GetUserByUsernameAsync(username);//thats for the sender //go & get our users sender & recipient from our repository
+            //change unitofwork
+             var sender = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
+            // var sender = await _userRepository.GetUserByUsernameAsync(username);//thats for the sender //go & get our users sender & recipient from our repository
+            //change unitofwork
+            
             // we r still gonn need to get access to the users so that we can format'sthe message response 
-
-            var recipient = await _userRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);// we will also save our recipient 
+            
+            //change unitofwork
+            var recipient = await _unitOfWork.UserRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);
+            // var recipient = await _userRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);// we will also save our recipient 
+            //change unitofwork
 
             if (recipient == null) throw new HubException("Not found user");
             var message = new Message
@@ -126,7 +159,12 @@ namespace API.SignalR
             };
             var groupName = GetGroupName(sender.UserName, recipient.UserName);//we can move get group name will move this up of the if statement bcoz 
             // we need access to it earlier on So we r gonna get a group anme & then what we can do chanhe this to group name 
-            var group = await _messageRepository.GetMessageGroup(groupName);
+            
+             //change unitofwork
+             var group = await _unitOfWork.MessageRepository.GetMessageGroup(groupName);
+            // var group = await _messageRepository.GetMessageGroup(groupName);
+             //change unitofwork
+            
             if (group.Connections.Any(x => x.Username == recipient.UserName))
             {
                 message.DateRead = DateTime.UtcNow;//UtcNow;// then we r gonna ned to change a few other methods to use this for reasons 
@@ -150,10 +188,16 @@ namespace API.SignalR
             }
 
 
-
-            _messageRepository.AddMessage(message); // we r still gonna add the message to our repository & we still need to save the message to our repository
-
-            if (await _messageRepository.SaveAllAsync()) ///save our changes and return the message to the clinet 
+             //change unitofwork
+             _unitOfWork.MessageRepository.AddMessage(message);
+            // _messageRepository.AddMessage(message); // we r still gonna add the message to our repository & we still need to save the message to our repository
+             //change unitofwork
+            
+            //change unitofwork
+            if (await _unitOfWork.Complete())
+            // if (await _messageRepository.SaveAllAsync()) ///save our changes and return the message to the clinet 
+            //change unitofwork
+            
             {
                 // var group = GetGroupName(sender.UserName, recipient.UserName);//to get the group name & then what we can do instead of returning Ok what we can do saying
                 await Clients.Group(groupName).SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
@@ -175,18 +219,32 @@ namespace API.SignalR
          //gonna knwo who is connected inside the group that they r in & therefore we'll be able to check to see if the recipient has joined the group & mark the messages as read 
          
         {
-            var group = await _messageRepository.GetMessageGroup(groupName);// we r already got the group that we r getting from our repositoryanyway 
+            //change unitofwork
+            var group = await _unitOfWork.MessageRepository.GetMessageGroup(groupName);
+            // var group = await _messageRepository.GetMessageGroup(groupName);// we r already got the group that we r getting from our repositoryanyway 
+            //change unitofwork
+            
             var connection = new Connection(Context.ConnectionId, Context.User.GetUsername());// get a new connection when a user connects to this hub thet're always given a new connectionId unless they're reconnecting 
                                                                                               //we do not need the HubCallerContext here as we r still inside the hub
 
             if (group == null)// check to see if the group is equal to null 
             {
                 group = new Group(groupName);//if it is 
-                _messageRepository.AddGroup(group);//then we access our message repository 
+                
+                //change unitofwork
+                _unitOfWork.MessageRepository.AddGroup(group);
+                // _messageRepository.AddGroup(group);//then we access our message repository 
+                //change unitofwork
+
             }
 
             group.Connections.Add(connection);
-            if (await _messageRepository.SaveAllAsync()) return group;//check to make sure that we have saved successfully then return 
+
+            //change unitofwork
+             if (await _unitOfWork.Complete()) return group;
+            // if (await _messageRepository.SaveAllAsync()) return group;//check to make sure that we have saved successfully then return 
+            //change unitofwork
+            
             //also need to do bcoz we r returning from this now is we need to throw an exception if that doesn't work 
             throw new HubException("Failed to join group");
 
@@ -204,12 +262,27 @@ namespace API.SignalR
         {
             // var connection = await _messageRepository.GetConnection(connectionId);// we r still inside the hub so we can swap this with connectionId
             //  var connection = await _messageRepository.GetConnection(Context.ConnectionId);// we do need to get the group for this particular connection bcoz we were again gonna want to return the group from this particular method so we add the group inside here
-            var group = await _messageRepository.GetGroupForConnection(Context.ConnectionId);//but still we need access to the connection so that we can actually remove the connection 
+           
+           //change unitofwork
+            var group = await _unitOfWork.MessageRepository.GetGroupForConnection(Context.ConnectionId);
+            // var group = await _messageRepository.GetGroupForConnection(Context.ConnectionId);//but still we need access to the connection so that we can actually remove the connection 
+           //change unitofwork
+
             var connection = group.Connections.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);// we got our group that include our connection we can get it inside there
-            _messageRepository.RemoveConnection(connection);//then we can use the message repository remove connection method 
+           
+           //change unitofwork
+           _unitOfWork.MessageRepository.RemoveConnection(connection);
+            // _messageRepository.RemoveConnection(connection);//then we can use the message repository remove connection method 
+           //change unitofwork
+
             // await _messageRepository.SaveAllAsync(); 
             //now we got smthing to do when we connect to the user or new user connects or disconnects form this message hub go to onConnectedAsync method 
-            if (await _messageRepository.SaveAllAsync()) return group;// check to see ifthis is successfully
+            
+            //change unitofwork
+            if (await _unitOfWork.Complete()) return group;
+            // if (await _messageRepository.SaveAllAsync()) return group;// check to see ifthis is successfully
+            //change unitofwork
+            
             throw new HubException("Failed to remove from group");// if that fails 
             // now we've got 2 methods that return the current populated group that we can use to return to the group themselves 
         }

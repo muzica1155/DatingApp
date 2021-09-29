@@ -37,20 +37,36 @@ namespace API.Helpers
             //our program docs class earlier
             var userId = resultContext.HttpContext.User.GetUserId();//means now we can specify the get user by Id async methos in here & swap user username for userID 
             
-            var repo = resultContext.HttpContext.RequestServices.GetService<IUserRepository>();
+            //change unitofwork
+            var uow = resultContext.HttpContext.RequestServices.GetService<IUnitOfWork>();
+            // var repo = resultContext.HttpContext.RequestServices.GetService<IUserRepository>();
+            //change unitofwork
+
             //GetService<IUserRepository>();//to specify the that we want to get accesss to IuserRepository 
 
             // var user = await repo.GetUserByUsernameAsync(username);//want to get hold of our user object 
-
-            var user = await repo.GetUserByIdAsync(userId);//means now we can specify the get user by Id async methos in here & swap user username for userID 
             
+            //change unitofwork
+            var user = await uow.UserRepository.GetUserByIdAsync(userId);
+            // var user = await repo.GetUserByIdAsync(userId);//means now we can specify the get user by Id async methos in here & swap user username for userID 
+            //change unitofwork
+
             // need to modify instead of using this// GetUserByUsernameAsync// we going to use the GetUserByIdAsync method & also able to get userID in here as well //var username = resultContext.HttpContext.//we
             //what we wnat to do in addition to returning the user's username & a token we're going to also set the user Id inside there as well so that we'have got easy access to either the ID or the username when we receive a token // TokenService.cs
 
 
             //GetUserByUsernameAsync(username);// we r using here  
-            user.LastActive = DateTime.Now;
-            await repo.SaveAllAsync();// now go ahead save changes 
+
+            //change unitofwork
+            user.LastActive = DateTime.UtcNow;
+            // user.LastActive = DateTime.Now;
+            //change unitofwork
+
+            //change unitofwork
+            await uow.Complete();
+            // await repo.SaveAllAsync();// now go ahead save changes 
+            //change unitofwork
+
             // we need to do add this is a service this log user activity so we can make use of it add this in ApplicationServiceExtension
 
         }
