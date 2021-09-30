@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as signalR from '@microsoft/signalr';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -30,7 +31,8 @@ export class MessageService {
    {
      this.hubConnection = new HubConnectionBuilder()
      .withUrl(this.hubUrl + '/message?user=' + otherUsername, {  //'/message')& here we want to pass up the other username as a query string with the key of users 
-       accessTokenFactory: () => user.token
+    
+        accessTokenFactory: () => user.token
      })
      .withAutomaticReconnect()// so that client automatic reconnect so the client can try & reconnect themselves
      .build()

@@ -56,7 +56,7 @@
              <div *ngIf="container === 'Outbox'">
                  <img 
                  class="img-circle rounded-circle m-2"
-                 src="{{message.recipientPhotoUrl || './assets.user.png'}}"
+                 src="{{message.recipientPhotoUrl || './assets/user.png'}}"
                   alt="{{message.recipientUsername}}">
                   <strong>{{message.recipientUsername | titlecase}}</strong>
                   <!--say messageSender dont send the knownAs or send a username in this case we didn't send down the knownAs property we could do stick with username -->
@@ -69,7 +69,7 @@
              <div *ngIf="container !== 'Outbox'">
                 <img 
                 class="img-circle rounded-circle m-2"
-                src="{{message.senderPhotoUrl || './assets.user.png'}}"
+                src="{{message.senderPhotoUrl || './assets/user.png'}}"
                  alt="{{message.senderUsername}}">
                  <strong>{{message.senderUsername | titlecase}}</strong>
                  <!--If is not = to outbox thenwe want to show the sender photo Url & this is going to be -->

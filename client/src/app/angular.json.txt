@@ -17,7 +17,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "../API/wwwroot",
+            "outputPath": "dist/client",// this this is changed
+            //we wan to build our app so that we can publish the files to our Kestral server pr to our API
+            //what we do update the output path where it creates the files that we r going to build & set htis too
+            "outputPath": "../API/wwwroot",  //this is the deafult content folder that the Kestral server will use for static files r Angular app is a static file
+            //it's just JavaScript files maybe some images & etc everything gets bundled into javascript & javascript is static content
+            // go to starter classin the API after we publish this we need to tell our API server to use static files r Angular app is a static files r Angular app is a static files r Angular app is a static files 
+            //
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -42,13 +48,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "1.29mb",
+                  "maximumError": "4kb"
                 }
               ],
               "fileReplacements": [

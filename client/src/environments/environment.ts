@@ -5,7 +5,7 @@
 export const environment = {
   production: false, // put inside this any variables we want to use acress our application that will automatically use a different version when we r in productons
   apiUrl: 'https://localhost:5001/api/', //
-  hubUrl: 'https://localhost:5001/hubs' //add the route for the hub //changes durng signalR
+  hubUrl: 'https://localhost:5001/hubs/' //add the route for the hub //changes durng signalR
   // hostURl: 'https://localhost',
   // username: 'user1',
   // token: 'abcxyz',

@@ -108,6 +108,9 @@ namespace API
 
             app.UseAuthorization();
 
+            app.UseDefaultFiles(); //publish /what this will do is if there's anindex to age HTML inside there then it's gonna use that & bcoz our angular app includes an index to age HTML then it's gonna to serve that & that's what it means by the deault files 
+            app.UseStaticFiles(); //use static as well go back to terminal stop program & type ng build this is gonna create static file version of what we saw when we run from our development serverBut its gonna create them in that wwwroot folder & that's gonna ahead & created these files 
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -117,7 +120,7 @@ namespace API
                 // we dont want to try & get a username if a user is not authenticated for instance
                 endpoints.MapHub<MessageHub>("hubs/message"); // need to add another endpoint 
                 // this takes care of when a user connects what we also want to do is take a look at sending a message via this hub & we;ll look next 
-
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
