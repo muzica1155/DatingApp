@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as signalR from '@microsoft/signalr';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -18,7 +17,7 @@ export class MessageService {
    baseUrl = environment.apiUrl;// need our base Url in here //baseUrl: string;// not coon here bcozwe r assigning smthing to this property & need our 
    //environment 
    hubUrl = environment.hubUrl;// add hub connection for our messages
-   private hubConnection : HubConnection;
+   private hubConnection: HubConnection;
    private messageThreadSource = new BehaviorSubject<Message[]>([]);//what happens when we receive the messages when we connect to this hub FOr that we create an observable for this & we'll say private message thread
 //<Message[]>// store message array//([])// intitialize empty array 
    messageThread$ = this.messageThreadSource.asObservable();//messageThread$// messageThread property signfy this is observable
@@ -30,7 +29,7 @@ export class MessageService {
    createHubConnection(user: User, otherUsername: string)
    {
      this.hubConnection = new HubConnectionBuilder()
-     .withUrl(this.hubUrl + '/message?user=' + otherUsername, {  //'/message')& here we want to pass up the other username as a query string with the key of users 
+     .withUrl(this.hubUrl + 'message?user=' + otherUsername, {  //'/message')& here we want to pass up the other username as a query string with the key of users 
     
         accessTokenFactory: () => user.token
      })

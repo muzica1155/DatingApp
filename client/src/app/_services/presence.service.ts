@@ -36,12 +36,13 @@ export class PresenceService {
       .build()
 
       this.hubConnection 
-      .start()//& this
+      .start() //& this
       .catch(error => console.log(error)); 
+
       this.hubConnection.on('UserIsOnline', username => {
          this.onlineUsers$.pipe(take(1)).subscribe(usernames => {
            this.onlineUsersSource.next([...usernames, username])//spread operator & pass in our username
-         });//replace it with just an ability to update the online users that we r tracking inside here// once again we dont want
+         })//replace it with just an ability to update the online users that we r tracking inside here// once again we dont want
          //to mutate data here jus tn case that interferes with how angular tracks changes in our observable
         // this.toastr.info(username + ' has connected');//remove the annoyance from our app by removing toast
         
