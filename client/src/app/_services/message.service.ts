@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { Group } from '../_models/group';
 import { Message } from '../_models/message';
 import { User } from '../_models/user';
+import { BusyService } from './busy.service';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 
 
@@ -19,15 +20,17 @@ export class MessageService {
    hubUrl = environment.hubUrl;// add hub connection for our messages
    private hubConnection: HubConnection;
    private messageThreadSource = new BehaviorSubject<Message[]>([]);//what happens when we receive the messages when we connect to this hub FOr that we create an observable for this & we'll say private message thread
-//<Message[]>// store message array//([])// intitialize empty array 
-   messageThread$ = this.messageThreadSource.asObservable();//messageThread$// messageThread property signfy this is observable
+//<Message[]>// store message array//([])// intitialize empty array //ut we r not doing anything with the observable when we close our connection down this is gonna to store the messages that were 
+//previously sent with differnt user when we stop our hub connection nothing changes inside here also we want to display a loading indicator to say that smthing is going on 
+   messageThread$ = this.messageThreadSource.asObservable(); //messageThread$// messageThread property signfy this is observable
 
 
-  constructor(private http: HttpClient)// insdie here we wna to do is inject Http into contractor 
+  constructor(private http: HttpClient, private busyService: BusyService) // insdie here we wna to do is inject Http into contractor //add servic for loading
    { }
 
-   createHubConnection(user: User, otherUsername: string)
+   createHubConnection(user: User, otherUsername: string) // as we r creating our hub connection we can switch on our loading indicators
    {
+     this.busyService.busy();
      this.hubConnection = new HubConnectionBuilder()
      .withUrl(this.hubUrl + 'message?user=' + otherUsername, {  //'/message')& here we want to pass up the other username as a query string with the key of users 
     
@@ -35,8 +38,10 @@ export class MessageService {
      })
      .withAutomaticReconnect()// so that client automatic reconnect so the client can try & reconnect themselves
      .build()
-     this.hubConnection.start().catch(error => console.log(error));
-
+     this.hubConnection.start()
+     .catch(error => console.log(error)) //what we have here is a promise that's returned from the start that we can use to turn off the loading indicator
+     .finally(() => this.busyService.idle()); //what we can do whether it succeeds or fails we always want to turn off our leading indicators specify after catch finally & then we can have the function 
+     //(() => this.busyService)//used callback function thant gonna turn off our loading indicator 
      this.hubConnection.on('ReceiveMessageThread', messages => { // we need to target our receive message tthead// we r gonna get the message thread when we join a message group 
       //but what we want to make sure of is that if we join another message group then that user automatically marks the messages as read bcoz when we join it that means we r reading the message at the sametime
       // But now we've got a new method to listne for 
@@ -82,6 +87,10 @@ export class MessageService {
    {
      if (this.hubConnection)
      {
+       // also want to do clear the messages when the hub connection is stopped as well as
+      this.messageThreadSource.next([]);// just gonna supply this with empty array So when we stop the hub connection, we r also gonna to clear the message thread source to an empty array
+      //head over to member messages components
+
       this.hubConnection.stop();//wrap this in safety condition so that we only try & stop it if it is actually in existence & this will prevent us 
       //from running inot any problem when doing either of those 2 operations 
 
@@ -101,9 +110,11 @@ export class MessageService {
    }
 
    GetMessageThread(username: string)// we r not add pagination to this // we r going t
+   // we r getting our message thread but we r not doing anything with the observable when we close our connection down this is gonna to store the messages that were 
    {
      return this.http.get<Message[]>(this.baseUrl + 'messages/thread/' + username);// & it;s not that we cant add pagination just try to avoid doing to much repetitive
      //repetitive tasl just introduce new things jusr concenreate on the thread & functionality inside there 
+     
    }
 
    async sendMessage(username: string, content: string)///add an method to go & send a message to call it send message 

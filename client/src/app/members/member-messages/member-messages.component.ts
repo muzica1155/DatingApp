@@ -22,6 +22,10 @@ export class MemberMessagesComponent implements OnInit {
   // messages: Message[];// change this
   @Input() messages: Message[];// changed the input properties of the messages & the we can pass them down //messages: Message[];// 
   //down to our member messages component
+  loading = false;//set this false initially //what we want to hear is a loading indicator that shows when somebody is sending a message obviously as we published
+  //our application now we noticed this more than we did when we were developing the app signalR doesn't use HTTP So our loading interceptor
+  //didn't display any of this delay 
+
 
   //we also need to do is switch back to our member detial component 7 then instead of passing down the username
   //<app-member-messages [username]="member.username">// in member-details.component.html
@@ -48,8 +52,10 @@ export class MemberMessagesComponent implements OnInit {
   }
   sendMessage()//crate a method inside here to actually send a message So 
   {
+    this.loading = true;  //when we send a message we r gonna to say this stop loading = true
     // this.messageService.sendMessage(this.username, this.messageContent).subscribe(message => {
-      this.messageService.sendMessage(this.username, this.messageContent).then(() => {
+      this.messageService.sendMessage(this.username, this.messageContent).then(() => { // we got then option  here reset form add the finally
+
     // we use then when we r using promises as we r now & we r getting the message back from here so we don't need the message in there this empty parenthesis
      // simply receiving this form our signal our hub 
 
@@ -59,7 +65,8 @@ export class MemberMessagesComponent implements OnInit {
       // we r not gonna push the message anymore either 
       this.messageForm.reset(); //after we send a mesage we r gonna say// we just clear the content inside the form 
 
-    })// we need access to the username which we also removed from  this as well 
+    }).finally(() => this.loading = false);//bcoz whenever we get an error or the message is sent successfully again we always want to turn off the leading indicator head over to member-messsage template
+    // we need access to the username which we also removed from  this as well 
     // we have our username now we also want is this message content which will add to our properties & will say 
     //after subsrcibe we need to get the message back fro this
   }

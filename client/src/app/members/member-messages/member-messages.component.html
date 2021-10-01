@@ -2,7 +2,12 @@
 <!--{{message?.content}}// add the optional chaining operator bcoz we r not doig any checking inside here -->
 
 <div class="card">
-    <div class="card-body">
+    <!--the scrolling is gonna be moving regardless of whether u got messages or not & bcoz we've moved this up will just change the heights to match the height waht going on left hand side-->
+    <div class="card-body"
+         #scrollMe
+         style="overflow: scroll; height: 535px;"
+         [scrollTop] = "scrollMe.scrollHeight" 
+    >
         <!-- <div *ngIf="messages?.length === 0"> -->
             <!--| async pipe is used to subscribe-->
             <div *ngIf="(messageService.messageThread$ | async)?.length === 0">
@@ -15,11 +20,11 @@
             <!-- we also use it here to chek the message length-->
             <!--bring container to the message we gonna get angular to control the scrolling of this to achieve that we add a template reference variable & just call it scroll me -->
             <!--[scrollTop=""]// what this gonna achieve -->
-            <ul #scrollMe
-            style="overflow: scroll; height: 500px;"
-            [scrollTop] = "scrollMe.scrollHeight"
+            <!--< ul #scrollMe style="overflow: scroll; height: 500px;" [scrollTop] = "scrollMe.scrollHeight"> -->
+            <ul     
             *ngIf="(messageService.messageThread$ | async)?.length > 0" 
             class="chat">
+            <!--Fix 2 issues the scroling So that the message box is always in the same place where have got messages or they haven't got messages we only add this scrolling functionality if there r messages bcoz it's inside here if they dont have messages then our form is gonna be displayed at the top underneath this cut the code & paste-->
             <!--then we can display this content so we'll add some a list item & loop over our messages-->
             <li *ngFor="let message of (messageService.messageThread$ | async)">
                 <div>
@@ -74,7 +79,11 @@
             type="text" 
             class="form-control input-sm" placeholder="Send a private message">
             <div class="input-group-append">
-                <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit">Send</button>
+                <button [disabled]="!messageForm.valid || loading" class="btn btn-primary" type="submit">Send
+                 <i *ngIf="loading" class= "fa fa-spinner fa-spin"></i>
+                </button>
+                <!--disabled the button if we r loading & gonna add on or condition inside here & set it to loading inside the button w add smthing from awesome to display a loading spinner add an icon-->
+                <!--add a icon for loading spinner add a conditional here check to see if we r loading -->
                 <!--check to see if the form is valid & if it is as in they've got smthing inside the message content then we'll set this to disabled -->
             <!--check the status of the message form & see if it's valid & if it isn't then we r turning off that functionality-->
             <!--also do bcoz once they've sent a message & it's been successful then we want to reset the form so that we clear the content inside that -->

@@ -165,8 +165,10 @@ namespace API.Controllers
                                                                                    // it has everyhting it need s & we dont neeed to return the user object fromthis  
         {// want to do when we update a user 1st thing hold of the user & we also need to get hold of the user's username not trust the user to give us their usernaem 
          // we actually want to get it from what we r authenticating again which is the token 
-            var username = User.GetUsername(); //inside the controller we have acces to a claims principle of the user now this contain info about their identity 
-                                               // want to do find the claims that matches the name identifier which is the claim that we give the user in that token 
+           
+            //after deployment
+             var username = User.GetUsername(); //inside the controller we have acces to a claims principle of the user now this contain info about their identity 
+               //after deployment                                // want to do find the claims that matches the name identifier which is the claim that we give the user in that token 
            //change unitofwork
             var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername()); //once we have the username
         //  var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername()); 
