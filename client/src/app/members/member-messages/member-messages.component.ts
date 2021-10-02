@@ -65,7 +65,7 @@ export class MemberMessagesComponent implements OnInit {
       // we r not gonna push the message anymore either 
       this.messageForm.reset(); //after we send a mesage we r gonna say// we just clear the content inside the form 
 
-    }).finally(() => this.loading = false);//bcoz whenever we get an error or the message is sent successfully again we always want to turn off the leading indicator head over to member-messsage template
+    }).finally(() => this.loading = false); //bcoz whenever we get an error or the message is sent successfully again we always want to turn off the leading indicator head over to member-messsage template
     // we need access to the username which we also removed from  this as well 
     // we have our username now we also want is this message content which will add to our properties & will say 
     //after subsrcibe we need to get the message back fro this

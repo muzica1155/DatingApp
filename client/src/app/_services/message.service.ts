@@ -30,7 +30,7 @@ export class MessageService {
 
    createHubConnection(user: User, otherUsername: string) // as we r creating our hub connection we can switch on our loading indicators
    {
-     this.busyService.busy();
+    this.busyService.busy();
      this.hubConnection = new HubConnectionBuilder()
      .withUrl(this.hubUrl + 'message?user=' + otherUsername, {  //'/message')& here we want to pass up the other username as a query string with the key of users 
     
@@ -88,7 +88,7 @@ export class MessageService {
      if (this.hubConnection)
      {
        // also want to do clear the messages when the hub connection is stopped as well as
-      this.messageThreadSource.next([]);// just gonna supply this with empty array So when we stop the hub connection, we r also gonna to clear the message thread source to an empty array
+       this.messageThreadSource.next([]);// just gonna supply this with empty array So when we stop the hub connection, we r also gonna to clear the message thread source to an empty array
       //head over to member messages components
 
       this.hubConnection.stop();//wrap this in safety condition so that we only try & stop it if it is actually in existence & this will prevent us 

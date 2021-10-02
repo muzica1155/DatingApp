@@ -4,9 +4,9 @@
 <div class="card">
     <!--the scrolling is gonna be moving regardless of whether u got messages or not & bcoz we've moved this up will just change the heights to match the height waht going on left hand side-->
     <div class="card-body"
-         #scrollMe
-         style="overflow: scroll; height: 535px;"
-         [scrollTop] ="scrollMe.scrollHeight" 
+    #scrollMe
+    style="overflow: scroll; height: 535px;"
+    [scrollTop] ="scrollMe.scrollHeight" 
     >
         <!-- <div *ngIf="messages?.length === 0"> -->
             <!--| async pipe is used to subscribe-->
@@ -80,7 +80,7 @@
             class="form-control input-sm" placeholder="Send a private message">
             <div class="input-group-append">
                 <button [disabled]="!messageForm.valid || loading" class="btn btn-primary" type="submit">Send
-                 <i *ngIf="loading" class= "fa fa-spinner fa-spin"></i>
+                    <i *ngIf="loading" class="fa fa-spinner fa-spin"></i>
                 </button>
                 <!--disabled the button if we r loading & gonna add on or condition inside here & set it to loading inside the button w add smthing from awesome to display a loading spinner add an icon-->
                 <!--add a icon for loading spinner add a conditional here check to see if we r loading -->
