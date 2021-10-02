@@ -22,7 +22,7 @@ export class MemberMessagesComponent implements OnInit {
   // messages: Message[];// change this
   @Input() messages: Message[];// changed the input properties of the messages & the we can pass them down //messages: Message[];// 
   //down to our member messages component
-  loading = false;//set this false initially //what we want to hear is a loading indicator that shows when somebody is sending a message obviously as we published
+  loading = false; //set this false initially //what we want to hear is a loading indicator that shows when somebody is sending a message obviously as we published
   //our application now we noticed this more than we did when we were developing the app signalR doesn't use HTTP So our loading interceptor
   //didn't display any of this delay 
 
